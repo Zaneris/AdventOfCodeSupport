@@ -11,9 +11,9 @@ using AdventOfCodeSupport;
 
 namespace Foo._2022;
 
-public class Day01 : AoCBase
+public class Day01 : AdventBase
 {
-    public Day01() : base(2022, 1) { }
+    public Day01() : base(/*year*/2022, /*day*/1) { }
 
     protected override void InternalPart1()
     {
@@ -27,16 +27,15 @@ public class Day01 : AoCBase
 }
 ```
 * The call to the base constructor has an optional 3rd parameter to disable the input for the day.
-* Create a `new Solutions()` at your entry point.
-* Select your day from the `Solutions`, for example:
+* Create a `new AdventSolutions()` at your entry point.
+* Select your day from the `AdventSolutions`, for example:
 ```csharp
 using AdventOfCodeSupport;
 
-var solutions = new Solutions();
-var today = solutions
-    .Where(x => x.Year == 2022)
-    .OrderByDescending(x => x.Day)
-    .First();
+var solutions = new AdventSolutions();
+var today = solutions.GetMostRecentDay();
+var day3 = solutions.GetDay(2022, 3);
+var day4 = solutions.First(x => x.Year == 2022 && x.Day == 4);
 ```
 * Run your solution parts with `today.Part1().Part2()`.
 * Or benchmark them with `today.Benchmark()`, benchmarking requires running in Release.
