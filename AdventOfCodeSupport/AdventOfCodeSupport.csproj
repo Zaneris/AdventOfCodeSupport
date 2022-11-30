@@ -10,10 +10,13 @@
         <Description>Supporting package for Advent of Code, auto-registers daily solutions, enables easy benchmarking with BenchmarkDotNet.</Description>
         <PackageProjectUrl>https://github.com/Zaneris/AdventOfCodeSupport</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Zaneris/AdventOfCodeSupport</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
 </Project>
