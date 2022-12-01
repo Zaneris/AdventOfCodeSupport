@@ -1,4 +1,5 @@
 using AdventOfCodeSupport;
+using PackageTests._2022;
 
 namespace PackageTests;
 
@@ -54,5 +55,12 @@ public class PackageTests
         var day = _solutions.GetDay(2022, 4);
         day.Part2();
         Assert.Equal("2", day.Bag["Lines"]);
+    }
+
+    [Fact]
+    public void NoCollection_ConstructNewDay_ValidYearDay()
+    {
+        var day = new TestDay12();
+        Assert.True(day.Year == 2022 && day.Day == 12);
     }
 }

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
@@ -71,7 +72,20 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     /// <summary>
     /// Registers self with AdventSolutions.
     /// </summary>
-    public AdventBase() { }
+    public AdventBase()
+    {
+        var type = GetType();
+        var split = type.FullName!.Split('.');
+        var dayMatches = Regex.Matches(split[^1], @"0?(\d+)");
+        var yearMatches = Regex.Matches(split[^2], @"^_(\d+)$");
+        if (dayMatches.Count != 1 || dayMatches[0].Groups.Count != 2
+            || yearMatches.Count != 1 || yearMatches[0].Groups.Count != 2)
+        {
+            throw new Exception($"Unable to automatically parse year/day from class: {type}");
+        }
+        Day = int.Parse(dayMatches[0].Groups[1].Value);
+        Year = int.Parse(yearMatches[0].Groups[1].Value);
+    }
 
     /// <summary>
     /// Registers self with AdventSolutions.

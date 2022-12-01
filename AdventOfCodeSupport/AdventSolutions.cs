@@ -22,19 +22,6 @@ public class AdventSolutions : IEnumerable<IAoC>
         foreach (var type in types)
         {
             var newInstance = (AdventBase)Activator.CreateInstance(type)!;
-            if (newInstance.Year == 0 || newInstance.Day == 0)
-            {
-                var split = type.FullName!.Split('.');
-                var dayMatches = Regex.Matches(split[^1], @"0?(\d+)");
-                var yearMatches = Regex.Matches(split[^2], @"^_(\d+)$");
-                if (dayMatches.Count != 1 || dayMatches[0].Groups.Count != 2
-                    || yearMatches.Count != 1 || yearMatches[0].Groups.Count != 2)
-                {
-                    throw new Exception($"Unable to automatically parse year/day from class: {type}");
-                }
-                newInstance.Day = int.Parse(dayMatches[0].Groups[1].Value);
-                newInstance.Year = int.Parse(yearMatches[0].Groups[1].Value);
-            }
             _list.Add(newInstance);
         }
     }
