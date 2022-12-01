@@ -75,7 +75,11 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     public AdventBase()
     {
         var type = GetType();
-        var split = type.FullName!.Split('.');
+        if (type.ToString().StartsWith("BenchmarkDotNet"))
+        {
+            type = type.BaseType;
+        }
+        var split = type!.FullName!.Split('.');
         var dayMatches = Regex.Matches(split[^1], @"0?(\d+)");
         var yearMatches = Regex.Matches(split[^2], @"^_(\d+)$");
         if (dayMatches.Count != 1 || dayMatches[0].Groups.Count != 2

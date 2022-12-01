@@ -13,7 +13,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageVersion>1.2.1</PackageVersion>
+        <PackageVersion>1.2.3</PackageVersion>
         <PackageReleaseNotes>- Fixed Year/Day not being set when AdventBase derived classes are instantiated without the AdventSolutions collection. (thanks Kao)</PackageReleaseNotes>
     </PropertyGroup>
 
