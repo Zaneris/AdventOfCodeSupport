@@ -18,6 +18,8 @@ public class Day01 : AdventBase
     protected override void InternalPart1()
     {
         // Part 1 solution here.
+        Console.WriteLine($"Input characters: {InputText.Length}");
+        Console.WriteLine($"Input lines: {InputLines.Length}");
     }
 
     protected override void InternalPart2()
@@ -26,7 +28,7 @@ public class Day01 : AdventBase
     }
 }
 ```
-* The call to the base constructor has an optional 3rd parameter to disable the input for the day.
+* The properties `InputText` and `InputLines` load from the day's input file automatically.
 * Create a `new AdventSolutions()` at your entry point.
 * Select your day from the `AdventSolutions`, for example:
 ```csharp

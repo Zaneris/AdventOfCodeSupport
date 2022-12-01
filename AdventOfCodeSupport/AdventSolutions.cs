@@ -55,15 +55,22 @@ Please ensure constructor calls : base({year}, {day}).");
 
     /// <summary>
     /// Get the most recent AoC solution from the collection.
+    /// If year is not specified, the most recent day of the most
+    /// recent year is returned.
     /// </summary>
+    /// <param name="year">Optional year.</param>
     /// <returns>Most recent solution.</returns>
     /// <exception cref="Exception">Collection empty.</exception>
-    public IAoC GetMostRecentDay()
+    public IAoC GetMostRecentDay(int? year = null)
     {
-        var result = _list
-            .OrderByDescending(x => x.Year)
-            .ThenByDescending(x => x.Day)
-            .FirstOrDefault();
+        var result = year is null
+            ? _list
+                .OrderByDescending(x => x.Year)
+                .ThenByDescending(x => x.Day)
+                .FirstOrDefault()
+            : _list
+                .Where(x => x.Year == year)
+                .MaxBy(x => x.Day);
         if (result is null) throw new Exception(@"No solutions found.
 Please ensure constructor calls : base(year, day).");
         return result;

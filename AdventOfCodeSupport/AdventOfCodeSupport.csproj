@@ -13,10 +13,11 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageVersion>1.1.0</PackageVersion>
-        <PackageReleaseNotes>Two new methods to grab a specific day, as well as one to grab the most recent day. GetDay, GetMostRecentDay.
-AoCBase -&gt; AdventBase
-Solutions -&gt; AdventSolutions</PackageReleaseNotes>
+        <PackageVersion>1.1.2</PackageVersion>
+        <PackageReleaseNotes>- Added optional year parameter to GetMostRecentDay
+- Added property InputLines
+- Input file only loaded when InputText or InputLines properties are used.
+- Optional AdventBase parameter for hasInput removed, no longer needed.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
