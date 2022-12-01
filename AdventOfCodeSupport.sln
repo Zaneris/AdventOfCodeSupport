@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCodeSupport", "AdventOfCodeSupport\AdventOfCodeSupport.csproj", "{CBD50939-1D02-4792-8084-E442D71BEA80}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageTests", "PackageTests\PackageTests.csproj", "{5A8C2640-69D3-4070-9EBE-984D0BD567A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{CBD50939-1D02-4792-8084-E442D71BEA80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBD50939-1D02-4792-8084-E442D71BEA80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBD50939-1D02-4792-8084-E442D71BEA80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A8C2640-69D3-4070-9EBE-984D0BD567A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A8C2640-69D3-4070-9EBE-984D0BD567A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A8C2640-69D3-4070-9EBE-984D0BD567A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A8C2640-69D3-4070-9EBE-984D0BD567A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

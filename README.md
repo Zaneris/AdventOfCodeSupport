@@ -13,8 +13,6 @@ namespace Foo._2022;
 
 public class Day01 : AdventBase
 {
-    public Day01() : base(/*year*/2022, /*day*/1) { }
-
     protected override void InternalPart1()
     {
         // Part 1 solution here.
@@ -25,6 +23,7 @@ public class Day01 : AdventBase
     protected override void InternalPart2()
     {
         // Part 2 solution here.
+        Bag["Foo"] = "Bar"; // Pass information to unit tests
     }
 }
 ```

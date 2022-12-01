@@ -12,12 +12,12 @@ public abstract class AdventBase : IAoC
     /// <summary>
     /// Year of solution.
     /// </summary>
-    public int Year { get; }
-    
+    public int Year { get; set; }
+
     /// <summary>
     /// Day of solution i.e. 1-25.
     /// </summary>
-    public int Day { get; }
+    public int Day { get; set; }
 
     private string? _inputText;
 
@@ -63,10 +63,22 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     }
 
     /// <summary>
+    /// Can be used for things like unit testing to pass information
+    /// back to the test.
+    /// </summary>
+    public Dictionary<string, string> Bag { get; } = new();
+
+    /// <summary>
+    /// Registers self with AdventSolutions.
+    /// </summary>
+    public AdventBase() { }
+
+    /// <summary>
     /// Registers self with AdventSolutions.
     /// </summary>
     /// <param name="year">Year of this AoC solution.</param>
     /// <param name="day">Day of this AoC solution i.e. 1-25.</param>
+    [Obsolete("Constructor no longer required.")]
     protected AdventBase(int year, int day)
     {
         Year = year;
@@ -77,7 +89,7 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     /// Called from Part1().
     /// </summary>
     protected abstract void InternalPart1();
-    
+
     /// <summary>
     /// Called from Part2().
     /// </summary>
