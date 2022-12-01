@@ -13,13 +13,14 @@ public abstract class AdventBase : IAoC
     /// <summary>
     /// Year of solution.
     /// </summary>
-    public int Year { get; set; }
+    public int Year { get; }
 
     /// <summary>
     /// Day of solution i.e. 1-25.
     /// </summary>
-    public int Day { get; set; }
+    public int Day { get; }
 
+    private string? _testInput;
     private string? _inputText;
 
     /// <summary>
@@ -29,6 +30,7 @@ public abstract class AdventBase : IAoC
     {
         get
         {
+            if (_testInput is not null) return _testInput;
             if (_inputText is not null) return _inputText;
             try
             {
@@ -141,5 +143,15 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     public void Benchmark()
     {
         BenchmarkRunner.Run(GetType());
+    }
+
+    /// <summary>
+    /// Set a custom input to be used by InputText and InputLines instead of the
+    /// automatically loaded day's input file.
+    /// </summary>
+    /// <param name="input">The custom input to test with.</param>
+    public void SetTestInput(string? input)
+    {
+        _testInput = input;
     }
 }

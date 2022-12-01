@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Text.RegularExpressions;
+using BenchmarkDotNet.Running;
 
 namespace AdventOfCodeSupport;
 
@@ -76,5 +77,32 @@ Please ensure constructor calls : base({year}, {day}).");
         if (result is null) throw new Exception(@"No solutions found.
 Please ensure constructor calls : base(year, day).");
         return result;
+    }
+
+    /// <summary>
+    /// Benchmark all solutions inside a single project.
+    /// </summary>
+    /// <exception cref="Exception">Solutions in multiple projects.</exception>
+    public void BenchmarkAll()
+    {
+        if (_list.Count < 1) throw new Exception("At least 1 day's solution is needed.");
+        var assembly = _list[0].GetType().Assembly;
+        for (var i = 1; i < _list.Count; i++)
+        {
+            if (_list[i].GetType().Assembly != assembly)
+            {
+                throw new Exception("All day's solutions must be in the same project.");
+            }
+        }
+        BenchmarkRunner.Run(assembly);
+    }
+
+    /// <summary>
+    /// Benchmark all solutions inside a specific project.
+    /// </summary>
+    /// <param name="solutionFromProject">A solution from the project to benchmark everything in.</param>
+    public void BenchmarkAll(IAoC solutionFromProject)
+    {
+        BenchmarkRunner.Run(solutionFromProject.GetType().Assembly);
     }
 }

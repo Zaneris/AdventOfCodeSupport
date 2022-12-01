@@ -31,10 +31,4 @@ public interface IAoC
     /// Benchmark part 1 and 2 of this day with BenchmarkDotNet.
     /// </summary>
     public void Benchmark();
-
-    /// <summary>
-    /// Can be used for things like unit testing to pass information
-    /// back to the test.
-    /// </summary>
-    public Dictionary<string, string> Bag { get; }
 }

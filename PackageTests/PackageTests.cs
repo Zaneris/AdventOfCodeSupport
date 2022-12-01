@@ -1,4 +1,5 @@
 using AdventOfCodeSupport;
+using AdventOfCodeSupport.Testing;
 using PackageTests._2022;
 
 namespace PackageTests;
@@ -46,7 +47,19 @@ public class PackageTests
     {
         var day = _solutions.GetDay(2022, 4);
         day.Part1();
-        Assert.Contains("Test", day.Bag["Text"]);
+        Assert.Contains("Test", day.GetBag()["Text"]);
+    }
+
+    [Fact]
+    public void InputTest_CustomInput_TextLoaded()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.SetTestInput("""
+            123
+            456
+            """);
+        day.Part1();
+        Assert.StartsWith("123", day.GetBag()["Text"]);
     }
 
     [Fact]
@@ -54,7 +67,7 @@ public class PackageTests
     {
         var day = _solutions.GetDay(2022, 4);
         day.Part2();
-        Assert.Equal("2", day.Bag["Lines"]);
+        Assert.Equal("2", day.GetBag()["Lines"]);
     }
 
     [Fact]
