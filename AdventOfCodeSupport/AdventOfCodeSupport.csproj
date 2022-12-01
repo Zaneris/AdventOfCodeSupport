@@ -15,7 +15,7 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageVersion>1.2.0</PackageVersion>
         <PackageReleaseNotes>- Removed the need for a constructor in day solutions.
-- Added versatile "Bag" to AventBase, for passing information to unit tests.</PackageReleaseNotes>
+- Added versatile "Bag" to AdventBase, for passing information to unit tests.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
