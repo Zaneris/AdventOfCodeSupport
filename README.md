@@ -6,7 +6,7 @@ This package provides support to simplify the process of storing each day's puzz
 * Add a subfolder to the year called `Inputs`.
 * Place each day's input into that folder named by day with 2 digits `01.txt`.
 * Create a class in the `2022` folder called `Day01.cs`
-```
+```text
 Project/
 ├── Program.cs
 └── 2022/
