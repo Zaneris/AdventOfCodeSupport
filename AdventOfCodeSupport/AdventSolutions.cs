@@ -114,7 +114,7 @@ Please ensure constructor calls : base(year, day).");
         using var handler = new HttpClientHandler { UseCookies = false };
         using var client = new HttpClient(handler) { BaseAddress = new Uri("https://www.adventofcode.com/") };
 
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "1.3.0");
+        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "1.3.1");
         var comment = new ProductInfoHeaderValue("(nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
         client.DefaultRequestHeaders.UserAgent.Add(version);
         client.DefaultRequestHeaders.UserAgent.Add(comment);
@@ -125,6 +125,7 @@ Please ensure constructor calls : base(year, day).");
             var path = $"../../../{day.Year}/Inputs/{day.Day.ToString("D2")}.txt";
             if (File.Exists(path)) continue;
             Console.WriteLine($"Downloading input {day.Year}-{day.Day}...");
+            Directory.CreateDirectory($"../../../{day.Year}/Inputs/");
             var result = await client.GetAsync($"{day.Year}/day/{day.Day}/input");
             if (!result.IsSuccessStatusCode)
             {
