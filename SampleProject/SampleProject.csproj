@@ -1,14 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-    </PropertyGroup>
+        <UserSecretsId>5c684afe-6a68-4ef3-9f10-8b161f8895c2</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\AdventOfCodeSupport\AdventOfCodeSupport.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="2022\Inputs" />
     </ItemGroup>
 
 </Project>
