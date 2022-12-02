@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Text.RegularExpressions;
+using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
 namespace AdventOfCodeSupport;
@@ -80,29 +80,16 @@ Please ensure constructor calls : base(year, day).");
     }
 
     /// <summary>
-    /// Benchmark all solutions inside a single project.
+    /// Benchmark all solutions.
     /// </summary>
-    /// <exception cref="Exception">Solutions in multiple projects.</exception>
-    public void BenchmarkAll()
+    /// <param name="year">Optional year.</param>
+    /// <param name="config">Optional BenchmarkDotNet config.</param>
+    public void BenchmarkAll(int? year = null, IConfig? config = null)
     {
-        if (_list.Count < 1) throw new Exception("At least 1 day's solution is needed.");
-        var assembly = _list[0].GetType().Assembly;
-        for (var i = 1; i < _list.Count; i++)
-        {
-            if (_list[i].GetType().Assembly != assembly)
-            {
-                throw new Exception("All day's solutions must be in the same project.");
-            }
-        }
-        BenchmarkRunner.Run(assembly);
-    }
-
-    /// <summary>
-    /// Benchmark all solutions inside a specific project.
-    /// </summary>
-    /// <param name="solutionFromProject">A solution from the project to benchmark everything in.</param>
-    public void BenchmarkAll(IAoC solutionFromProject)
-    {
-        BenchmarkRunner.Run(solutionFromProject.GetType().Assembly);
+        var types = year is null
+            ? _list.Select(x => x.GetType()).ToArray()
+            : _list.Where(x => x.Year == year).Select(x => x.GetType()).ToArray();
+        var summaries = BenchmarkRunner.Run(types, config);
+        Console.WriteLine($"Results saved to: {summaries[0].ResultsDirectoryPath}");
     }
 }

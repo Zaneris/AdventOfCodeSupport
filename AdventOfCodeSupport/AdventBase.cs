@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
 namespace AdventOfCodeSupport;
@@ -140,9 +141,11 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     /// <summary>
     /// Benchmark part 1 and 2 with BenchmarkDotNet.
     /// </summary>
-    public void Benchmark()
+    /// <param name="config">Optional BenchmarkDotNet config.</param>
+    public void Benchmark(IConfig? config = null)
     {
-        BenchmarkRunner.Run(GetType());
+        var summary = BenchmarkRunner.Run(GetType(), config);
+        Console.WriteLine($"Results saved to: {summary.ResultsDirectoryPath}");
     }
 
     /// <summary>

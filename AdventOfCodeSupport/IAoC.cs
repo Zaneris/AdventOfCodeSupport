@@ -1,3 +1,5 @@
+using BenchmarkDotNet.Configs;
+
 namespace AdventOfCodeSupport;
 
 /// <summary>
@@ -30,5 +32,6 @@ public interface IAoC
     /// <summary>
     /// Benchmark part 1 and 2 of this day with BenchmarkDotNet.
     /// </summary>
-    public void Benchmark();
+    /// <param name="config">Optional BenchmarkDotNet config.</param>
+    public void Benchmark(IConfig? config = null);
 }
