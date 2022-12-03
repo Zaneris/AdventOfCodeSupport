@@ -114,7 +114,7 @@ Please ensure constructor calls : base(year, day).");
         using var handler = new HttpClientHandler { UseCookies = false };
         using var client = new HttpClient(handler) { BaseAddress = new Uri("https://www.adventofcode.com/") };
 
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "1.3.2");
+        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "1.3.3");
         var comment = new ProductInfoHeaderValue("(nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
         client.DefaultRequestHeaders.UserAgent.Add(version);
         client.DefaultRequestHeaders.UserAgent.Add(comment);

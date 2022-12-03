@@ -9,6 +9,7 @@ namespace AdventOfCodeSupport;
 /// Registers self with AdventSolutions, and contains built-in
 /// benchmarking support for BenchmarkDotNet.
 /// </summary>
+[MemoryDiagnoser]
 public abstract class AdventBase : IAoC
 {
     /// <summary>
