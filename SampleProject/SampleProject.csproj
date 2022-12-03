@@ -6,14 +6,14 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <UserSecretsId>5c684afe-6a68-4ef3-9f10-8b161f8895c2</UserSecretsId>
-  </PropertyGroup>
+    </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AdventOfCodeSupport\AdventOfCodeSupport.csproj" />
+        <Folder Include="2022\Inputs" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="2022\Inputs" />
+        <PackageReference Include="AdventOfCodeSupport" Version="1.3.2" />
     </ItemGroup>
 
 </Project>
