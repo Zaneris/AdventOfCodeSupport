@@ -13,7 +13,7 @@ public class Day01 : AdventBase
 
     protected override void InternalPart2()
     {
-        Bag["Part2"] = InputText.Length.ToString();
+        Bag["Part2"] = InputBlocks[0].Text;
         Console.WriteLine("Part 2");
     }
 }

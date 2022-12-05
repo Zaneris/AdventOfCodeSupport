@@ -13,8 +13,9 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageVersion>1.3.3</PackageVersion>
-        <PackageReleaseNotes>- Added BenchmarkDotNet's [MemoryDiagnoser] to AdventBase</PackageReleaseNotes>
+        <PackageVersion>1.4.0</PackageVersion>
+        <PackageReleaseNotes>- Fixed InputLines removing leading whitespace.
+- Added InputBlocks, splits on double new lines.</PackageReleaseNotes>
         <PackageTags>aoc;adventofcode;advent;code;benchmark;benchmarkdotnet;</PackageTags>
     </PropertyGroup>
 

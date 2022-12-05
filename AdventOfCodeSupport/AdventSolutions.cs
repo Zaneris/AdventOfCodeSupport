@@ -110,12 +110,12 @@ Please ensure constructor calls : base(year, day).");
         var cookie = _config["session"];
         if (string.IsNullOrWhiteSpace(cookie))
             throw new Exception("Cannot download inputs, user secret \"session\" has not been set.");
-        
+
         using var handler = new HttpClientHandler { UseCookies = false };
         using var client = new HttpClient(handler) { BaseAddress = new Uri("https://www.adventofcode.com/") };
 
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "1.3.3");
-        var comment = new ProductInfoHeaderValue("(nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
+        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "1.4.0");
+        var comment = new ProductInfoHeaderValue("(+nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
         client.DefaultRequestHeaders.UserAgent.Add(version);
         client.DefaultRequestHeaders.UserAgent.Add(comment);
         client.DefaultRequestHeaders.Add("cookie", $"session={cookie}");

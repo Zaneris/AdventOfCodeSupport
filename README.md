@@ -26,8 +26,9 @@ public class Day01 : AdventBase
     protected override void InternalPart1()
     {
         // Part 1 solution here.
-        Console.WriteLine($"Input characters: {InputText.Length}");
-        Console.WriteLine($"Input lines: {InputLines.Length}");
+        Console.WriteLine($"Characters: {InputText.Length}");
+        Console.WriteLine($"Lines: {InputLines.Length}");
+        Console.WriteLine($"Blocks: {InputBlocks.Length}");
     }
 
     protected override void InternalPart2()
@@ -38,6 +39,8 @@ public class Day01 : AdventBase
 }
 ```
 * The properties `InputText` and `InputLines` load from the day's input file automatically.
+* The property `InputBlocks` is the day's input text split on double new lines, contains
+text and lines for each block.
 * Create a `new AdventSolutions()` at your entry point.
 * Select your day from the `AdventSolutions`, for example:
 ```csharp

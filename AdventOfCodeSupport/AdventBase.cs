@@ -55,15 +55,32 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     private string[]? _inputLines;
 
     /// <summary>
-    /// The input file split on new lines, last empty line and trailing whitespace removed.
+    /// The input file split on new lines, leading and trailing empty lines removed.
     /// </summary>
     protected string[] InputLines
     {
         get
         {
             if (_inputLines is not null) return _inputLines;
-            _inputLines = InputText.Replace("\r", "").Trim().Split('\n');
+            _inputLines = InputText.Replace("\r", "").Trim('\n').Split('\n');
             return _inputLines;
+        }
+    }
+
+    private InputBlock[]? _inputBlocks;
+
+    /// <summary>
+    /// The input file split on double new lines, blocks contain raw text and lines.
+    /// Leading and trailing empty lines removed.
+    /// </summary>
+    protected InputBlock[] InputBlocks
+    {
+        get
+        {
+            if (_inputBlocks is not null) return _inputBlocks;
+            _inputBlocks = InputText.Replace("\r", "").Trim('\n').Split("\n\n").Select(x => new InputBlock(x))
+                .ToArray();
+            return _inputBlocks;
         }
     }
 

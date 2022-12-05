@@ -66,8 +66,48 @@ public class PackageTests
     public void InputTest_AllLines_LinesLoaded()
     {
         var day = _solutions.GetDay(2022, 4);
-        day.Part2();
-        Assert.Equal("2", day.GetBag()["Lines"]);
+        day.Part1();
+        Assert.Equal("4", day.GetBag()["Lines"]);
+    }
+
+    [Fact]
+    public void InputTest_AllLines_LeadingWhiteSpaceRetained()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.Part1();
+        Assert.Equal(" Test", day.GetBag()["FirstLine"]);
+    }
+
+    [Fact]
+    public void InputTest_Blocks_NumberOfBlocks()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.Part1();
+        Assert.Equal("2", day.GetBag()["Blocks"]);
+    }
+
+    [Fact]
+    public void InputTest_Blocks_FirstBlockLines()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.Part1();
+        Assert.Equal("2", day.GetBag()["Block1Lines"]);
+    }
+
+    [Fact]
+    public void InputTest_Blocks_FirstBlockLeadingWhitespaceRetained()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.Part1();
+        Assert.StartsWith(" Test", day.GetBag()["Block1Text"]);
+    }
+
+    [Fact]
+    public void InputTest_Blocks_SecondBlockLines()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.Part1();
+        Assert.Equal("1", day.GetBag()["Block2Lines"]);
     }
 
     [Fact]
