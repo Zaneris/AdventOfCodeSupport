@@ -25,6 +25,23 @@ public class InputBlock
         }
     }
 
+    private InputBlock[]? _inputBlocks;
+
+    /// <summary>
+    /// The input file split on double new lines, blocks contain raw text and lines.
+    /// Leading and trailing empty lines removed.
+    /// </summary>
+    public InputBlock[] Blocks
+    {
+        get
+        {
+            if (_inputBlocks is not null) return _inputBlocks;
+            _inputBlocks = Text.Replace("\r", "").Trim('\n').Split("\n\n").Select(x => new InputBlock(x))
+                .ToArray();
+            return _inputBlocks;
+        }
+    }
+
     /// <summary>
     /// Used by package.
     /// </summary>

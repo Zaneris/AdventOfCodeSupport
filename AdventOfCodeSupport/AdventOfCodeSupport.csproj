@@ -13,7 +13,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageVersion>1.4.0</PackageVersion>
+        <PackageVersion>2.0.0-alpha.2</PackageVersion>
         <PackageReleaseNotes>- Fixed InputLines removing leading whitespace.
 - Added InputBlocks, splits on double new lines.</PackageReleaseNotes>
         <PackageTags>aoc;adventofcode;advent;code;benchmark;benchmarkdotnet;</PackageTags>

@@ -22,25 +22,23 @@ public abstract class AdventBase : IAoC
     /// </summary>
     public int Day { get; }
 
-    private string? _testInput;
-    private string? _inputText;
+    private InputBlock? _input;
 
     /// <summary>
     /// The entire text of the loaded input file.
     /// </summary>
-    protected string InputText
+    protected InputBlock Input
     {
         get
         {
-            if (_testInput is not null) return _testInput;
-            if (_inputText is not null) return _inputText;
+            if (_input is not null) return _input;
             try
             {
                 var directory = new DirectoryInfo("../../../../").Name;
                 var isBenchmark = directory.StartsWith("net");
                 if (isBenchmark) Console.SetOut(TextWriter.Null);
                 var relative = isBenchmark ? "../../../../../../../" : "../../../";
-                _inputText = File.ReadAllText($"{relative}{Year}/Inputs/{Day.ToString("D2")}.txt");
+                _input = new InputBlock(File.ReadAllText($"{relative}{Year}/Inputs/{Day.ToString("D2")}.txt"));
             }
             catch (FileNotFoundException)
             {
@@ -48,47 +46,20 @@ public abstract class AdventBase : IAoC
 Please ensure input is saved to ""Project Root/{Year}/Inputs/{Day.ToString("D2")}.txt""
 If no input for the day, disable in the constructor with : base({Year}, {Day}, false)");
             }
-            return _inputText;
+            return _input;
         }
     }
 
-    private string[]? _inputLines;
-
-    /// <summary>
-    /// The input file split on new lines, leading and trailing empty lines removed.
-    /// </summary>
-    protected string[] InputLines
-    {
-        get
-        {
-            if (_inputLines is not null) return _inputLines;
-            _inputLines = InputText.Replace("\r", "").Trim('\n').Split('\n');
-            return _inputLines;
-        }
-    }
-
-    private InputBlock[]? _inputBlocks;
-
-    /// <summary>
-    /// The input file split on double new lines, blocks contain raw text and lines.
-    /// Leading and trailing empty lines removed.
-    /// </summary>
-    protected InputBlock[] InputBlocks
-    {
-        get
-        {
-            if (_inputBlocks is not null) return _inputBlocks;
-            _inputBlocks = InputText.Replace("\r", "").Trim('\n').Split("\n\n").Select(x => new InputBlock(x))
-                .ToArray();
-            return _inputBlocks;
-        }
-    }
+    private Dictionary<string, string>? _bag;
 
     /// <summary>
     /// Can be used for things like unit testing to pass information
     /// back to the test.
     /// </summary>
-    public Dictionary<string, string> Bag { get; } = new();
+    public Dictionary<string, string> Bag
+    {
+        get { return _bag ??= new Dictionary<string, string>(); }
+    }
 
     /// <summary>
     /// Registers self with AdventSolutions.
@@ -127,12 +98,12 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     /// <summary>
     /// Called from Part1().
     /// </summary>
-    protected abstract void InternalPart1();
+    protected abstract object InternalPart1();
 
     /// <summary>
     /// Called from Part2().
     /// </summary>
-    protected abstract void InternalPart2();
+    protected abstract object InternalPart2();
 
     /// <summary>
     /// Execute Part 1 of solution.
@@ -141,7 +112,8 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     [Benchmark]
     public IAoC Part1()
     {
-        InternalPart1();
+        var result = InternalPart1();
+        Console.WriteLine($"Part 1: {result}");
         return this;
     }
 
@@ -152,7 +124,8 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     [Benchmark]
     public IAoC Part2()
     {
-        InternalPart2();
+        var result = InternalPart2();
+        Console.WriteLine($"Part 2: {result}");
         return this;
     }
 
@@ -167,12 +140,12 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     }
 
     /// <summary>
-    /// Set a custom input to be used by InputText and InputLines instead of the
+    /// Set a custom input to be used by Input property instead of the
     /// automatically loaded day's input file.
     /// </summary>
     /// <param name="input">The custom input to test with.</param>
     public void SetTestInput(string? input)
     {
-        _testInput = input;
+        _input = input is null ? null : new InputBlock(input);
     }
 }
