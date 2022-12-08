@@ -4,16 +4,16 @@ namespace SampleProject._2022;
 
 public class Day02 : AdventBase
 {
-    protected override void InternalPart1()
+    protected override object InternalPart1()
     {
-        var max = InputLines.Max(int.Parse);
+        var max = Input.Lines.Max(int.Parse);
         Bag["Part1"] = max.ToString(); // Pass to unit test.
-        Console.WriteLine(max);
+        return max;
     }
 
-    protected override void InternalPart2()
+    protected override object InternalPart2()
     {
-        Bag["Part2"] = InputText.Length.ToString();
-        Console.WriteLine("Part 2");
+        Bag["Part2"] = Input.Text.Length.ToString();
+        return "Part2";
     }
 }

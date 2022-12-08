@@ -51,6 +51,9 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     }
 
     private Dictionary<string, string>? _bag;
+    
+    private string? _part1;
+    private string? _part2;
 
     /// <summary>
     /// Can be used for things like unit testing to pass information
@@ -84,18 +87,6 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     }
 
     /// <summary>
-    /// Registers self with AdventSolutions.
-    /// </summary>
-    /// <param name="year">Year of this AoC solution.</param>
-    /// <param name="day">Day of this AoC solution i.e. 1-25.</param>
-    [Obsolete("Constructor no longer required.")]
-    protected AdventBase(int year, int day)
-    {
-        Year = year;
-        Day = day;
-    }
-
-    /// <summary>
     /// Called from Part1().
     /// </summary>
     protected abstract object InternalPart1();
@@ -112,8 +103,8 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     [Benchmark]
     public IAoC Part1()
     {
-        var result = InternalPart1();
-        Console.WriteLine($"Part 1: {result}");
+        _part1 = InternalPart1().ToString();
+        Console.WriteLine($"Part 1: {_part1}");
         return this;
     }
 
@@ -124,9 +115,49 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     [Benchmark]
     public IAoC Part2()
     {
-        var result = InternalPart2();
-        Console.WriteLine($"Part 2: {result}");
+        _part2 = InternalPart2().ToString();
+        Console.WriteLine($"Part 2: {_part2}");
         return this;
+    }
+
+    /// <summary>
+    /// Check answers against the confirmed submitted answer on AoC.
+    /// Must have set user secret session cookie.
+    /// </summary>
+    /// <returns>Whether or not each part is correct, or null if unable to verify.</returns>
+    public async Task<(bool? part1Correct, bool? part2Correct)> CheckAnswers()
+    {
+        var client = new AdventClient();
+        var answers = await client.CheckDayAnswers(this);
+        var p1 = CheckAnswer(1, answers.Part1, _part1);
+        var p2 = CheckAnswer(2, answers.Part2, _part2);
+        return (p1, p2);
+    }
+
+    private static bool? CheckAnswer(int part, string? verified, string? result)
+    {
+        if (result is null)
+        {
+            Console.WriteLine($"Run `day.Part{part}()` before calling `CheckAnswers()`.");
+            return null;
+        }
+
+        if (verified is null)
+        {
+            Console.WriteLine($"Part {part} does not have a submitted accepted answer to check against.");
+            return null;
+        }
+        
+        Console.WriteLine(verified == result 
+            ? $"Correct: Part {part} ({result}) matches accepted answer ({verified})." 
+            : $"Incorrect: Part {part} ({result}) does not match ({verified}).");
+        return verified == result;
+    }
+
+    public async Task DownloadInput()
+    {
+        var client = new AdventClient();
+        await client.DownloadDay(this);
     }
 
     /// <summary>
@@ -147,5 +178,11 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     public void SetTestInput(string? input)
     {
         _input = input is null ? null : new InputBlock(input);
+    }
+
+    private async Task<AdventClient.AdventAnswers> GetSubmittedAnswers()
+    {
+        var client = new AdventClient();
+        return await client.CheckDayAnswers(this);
     }
 }

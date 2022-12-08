@@ -4,16 +4,16 @@ namespace SampleProject._2022;
 
 public class Day01 : AdventBase
 {
-    protected override void InternalPart1()
+    protected override object InternalPart1()
     {
-        var total = InputLines.Sum(int.Parse);
+        var total = Input.Lines.Sum(int.Parse);
         Bag["Part1"] = total.ToString(); // Pass to unit test.
-        Console.WriteLine(total);
+        return total;
     }
 
-    protected override void InternalPart2()
+    protected override object InternalPart2()
     {
-        Bag["Part2"] = InputBlocks[0].Text;
-        Console.WriteLine("Part 2");
+        Bag["Part2"] = Input.Blocks[0].Text;
+        return "Part2";
     }
 }

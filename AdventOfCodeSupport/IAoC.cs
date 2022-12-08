@@ -30,6 +30,19 @@ public interface IAoC
     public IAoC Part2();
 
     /// <summary>
+    /// Check answers against the confirmed submitted answer on AoC.
+    /// Must have set user secret session cookie.
+    /// </summary>
+    /// <returns>Whether or not each part is correct, or null if unable to verify.</returns>
+    public Task<(bool? part1Correct, bool? part2Correct)> CheckAnswers();
+
+    /// <summary>
+    /// Download day's input from AoC.
+    /// Must have set user secret session cookie.
+    /// </summary>
+    public Task DownloadInput();
+
+    /// <summary>
     /// Benchmark part 1 and 2 of this day with BenchmarkDotNet.
     /// </summary>
     /// <param name="config">Optional BenchmarkDotNet config.</param>

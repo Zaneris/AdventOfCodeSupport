@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Net.Http.Headers;
 using System.Reflection;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
@@ -98,43 +97,5 @@ Please ensure constructor calls : base(year, day).");
             : _list.Where(x => x.Year == year).Select(x => x.GetType()).ToArray();
         var summaries = BenchmarkRunner.Run(types, config);
         Console.WriteLine($"Results saved to: {summaries[0].ResultsDirectoryPath}");
-    }
-
-    /// <summary>
-    /// Download any inputs not already downloaded.
-    /// Rate limited to 1 per second.
-    /// </summary>
-    /// <exception cref="Exception">Secret not set or request failure.</exception>
-    public async Task DownloadInputsAsync()
-    {
-        var cookie = _config["session"];
-        if (string.IsNullOrWhiteSpace(cookie))
-            throw new Exception("Cannot download inputs, user secret \"session\" has not been set.");
-
-        using var handler = new HttpClientHandler { UseCookies = false };
-        using var client = new HttpClient(handler) { BaseAddress = new Uri("https://www.adventofcode.com/") };
-
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "1.4.0");
-        var comment = new ProductInfoHeaderValue("(+nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
-        client.DefaultRequestHeaders.UserAgent.Add(version);
-        client.DefaultRequestHeaders.UserAgent.Add(comment);
-        client.DefaultRequestHeaders.Add("cookie", $"session={cookie}");
-
-        foreach (var day in _list)
-        {
-            var path = $"../../../{day.Year}/Inputs/{day.Day.ToString("D2")}.txt";
-            if (File.Exists(path)) continue;
-            Console.WriteLine($"Downloading input {day.Year}-{day.Day}...");
-            Directory.CreateDirectory($"../../../{day.Year}/Inputs/");
-            var result = await client.GetAsync($"{day.Year}/day/{day.Day}/input");
-            if (!result.IsSuccessStatusCode)
-            {
-                throw new Exception($"Input download {day.Year}-{day.Day} failed. {result.ReasonPhrase}");
-            }
-
-            var text = await result.Content.ReadAsStringAsync();
-            await File.WriteAllTextAsync(path, text);
-            await Task.Delay(1000); // Rate limit input downloads.
-        }
     }
 }
