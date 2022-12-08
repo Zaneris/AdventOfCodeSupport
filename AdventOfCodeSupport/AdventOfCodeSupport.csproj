@@ -7,7 +7,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>AdventOfCodeSupport</Title>
         <Authors>Zaneris</Authors>
-        <Description>Supporting package for Advent of Code, auto-registers daily solutions, enables easy benchmarking with BenchmarkDotNet.</Description>
+        <Description>Supporting package for Advent of Code, auto-registers daily solutions, benchmark with BenchmarkDotNet, download input files, and submit answers.</Description>
         <PackageProjectUrl>https://github.com/Zaneris/AdventOfCodeSupport</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Zaneris/AdventOfCodeSupport</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
