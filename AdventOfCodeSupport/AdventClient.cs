@@ -47,7 +47,7 @@ internal class AdventClient
         var config = builder.Build();
         var cookie = config["session"];
         if (string.IsNullOrWhiteSpace(cookie)) throw _badClient;
-        
+
         var handler = new HttpClientHandler { UseCookies = false };
         _client = new HttpClient(handler) { BaseAddress = new Uri("https://adventofcode.com/") };
 
@@ -79,14 +79,14 @@ internal class AdventClient
         var text = JsonSerializer.Serialize(SavedAnswers);
         await File.WriteAllTextAsync("../../../Saved.json", text);
     }
-    
+
     public async Task<AdventAnswers> DownloadAnswersAsync(IAoC day)
     {
         if (SavedAnswers.TryGetValue($"{day.Year}-{day.Day}", out var saved))
         {
             if (saved.Part2 is not null) return saved;
             var diff = DateTime.UtcNow - saved.Timestamp;
-            
+
             // Rate limit checking for new answers to every 15 minutes.
             if (diff <= new TimeSpan(0, 15, 0)) return saved;
         }
@@ -107,7 +107,7 @@ internal class AdventClient
             },
             2 => new AdventAnswers
             {
-                Part1 = matches[0].Groups[1].Value, 
+                Part1 = matches[0].Groups[1].Value,
                 Part2 = matches[1].Groups[1].Value
             },
             _ => new AdventAnswers()
@@ -120,6 +120,7 @@ internal class AdventClient
     public async Task<bool> SubmitAnswerAsync(IAoC day, int part, string submission)
     {
         if (_client is null) throw _badClient;
+        var saved = SavedAnswers[$"{day.Year}-{day.Day}"];
         Console.WriteLine($"Submit Part {part} answer? (y/n):\n{submission}");
         var choice = Console.ReadLine()?.Trim().ToLower();
         if (choice != "y") return false;
@@ -138,9 +139,9 @@ internal class AdventClient
         if (regexGoldStar.IsMatch(html))
         {
             Console.WriteLine("You got a star!");
-            if (part == 1) SavedAnswers[$"{day.Year}-{day.Day}"] = new AdventAnswers { Part1 = submission };
-            else SavedAnswers[$"{day.Year}-{day.Day}"].Part2 = submission;
-            SavedAnswers[$"{day.Year}-{day.Day}"].Timestamp = DateTime.UtcNow;
+            if (part == 1) saved.Part1 = submission;
+            else saved.Part2 = submission;
+            saved.Timestamp = DateTime.UtcNow;
             await SaveAnswersAsync();
             return true;
         }
@@ -153,7 +154,7 @@ internal class AdventClient
         var match = waitBefore.Match(html);
         if (match.Success)
             Console.WriteLine($"Please {match.Captures[0].Value} submitting again.");
-        
+
         await Task.Delay(2000); // Rate limit.
         return false;
     }

@@ -38,12 +38,12 @@ public abstract class AdventBase : IAoC
                 var isBenchmark = directory.StartsWith("net");
                 if (isBenchmark) Console.SetOut(TextWriter.Null);
                 var relative = isBenchmark ? "../../../../../../../" : "../../../";
-                _input = new InputBlock(File.ReadAllText($"{relative}{Year}/Inputs/{Day.ToString("D2")}.txt"));
+                _input = new InputBlock(File.ReadAllText($"{relative}{Year}/Inputs/{Day:D2}.txt"));
             }
             catch (FileNotFoundException)
             {
-                throw new Exception(@$"Input not found for {Year} - Day {Day.ToString("D2")}
-Please ensure input is saved to ""Project Root/{Year}/Inputs/{Day.ToString("D2")}.txt""
+                throw new Exception(@$"Input not found for {Year} - Day {Day:D2}
+Please ensure input is saved to ""Project Root/{Year}/Inputs/{Day:D2}.txt""
 If no input for the day, disable in the constructor with : base({Year}, {Day}, false)");
             }
             return _input;
@@ -51,7 +51,7 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     }
 
     private Dictionary<string, string>? _bag;
-    
+
     private string? _part1;
     private string? _part2;
 
@@ -166,9 +166,9 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
             Console.WriteLine($"Part {part} does not have a submitted accepted answer to check against.");
             return null;
         }
-        
-        Console.WriteLine(verified == result 
-            ? $"Correct: Part {part} ({result}) matches accepted answer ({verified})." 
+
+        Console.WriteLine(verified == result
+            ? $"Correct: Part {part} ({result}) matches accepted answer ({verified})."
             : $"Incorrect: Part {part} ({result}) does not match ({verified}).");
         return verified == result;
     }
@@ -191,7 +191,7 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     public async Task<bool> SubmitPart1Async()
     {
         if (!_downloadedAnswers) await DownloadAnswers();
-        if (_part1 is null) 
+        if (_part1 is null)
             throw new Exception("Run `day.Part1()` before calling `SubmitPart1()`.");
         if (_checkedPart1 is not null)
         {
@@ -210,7 +210,7 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     public async Task<bool> SubmitPart2Async()
     {
         if (!_downloadedAnswers) await DownloadAnswers();
-        if (_part2 is null) 
+        if (_part2 is null)
             throw new Exception("Run `day.Part2()` before calling `SubmitPart2()`.");
         if (_checkedPart2 is not null)
         {
