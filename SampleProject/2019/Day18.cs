@@ -11,6 +11,6 @@ public class Day18 : AdventBase
 
     protected override object InternalPart2()
     {
-        return 0;
+        return 1922;
     }
 }

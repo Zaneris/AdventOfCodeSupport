@@ -1,5 +1,7 @@
 # AdventOfCodeSupport
-This package provides support to simplify the process of storing each day's puzzle within a single solution. Each day is automatically registered to a central location, with built-in support for BenchmarkDotNet.
+This package provides support to simplify the process of storing each day's 
+puzzle within a single solution. Each day is automatically registered to a 
+central location, with built-in support for BenchmarkDotNet, downloading input files, and submitting answers.
 ## Getting Started
 * Begin by adding this NuGet package to your project `AdventOfCodeSupport`.
 * Add a folder to your project for the current year i.e. `2022`.
@@ -26,9 +28,9 @@ public class Day01 : AdventBase
     protected override void InternalPart1()
     {
         // Part 1 solution here.
-        Console.WriteLine($"Characters: {InputText.Length}");
-        Console.WriteLine($"Lines: {InputLines.Length}");
-        Console.WriteLine($"Blocks: {InputBlocks.Length}");
+        Console.WriteLine($"Characters: {Input.Text.Length}");
+        Console.WriteLine($"Lines: {Input.Lines.Length}");
+        Console.WriteLine($"Blocks: {Input.Blocks.Length}");
     }
 
     protected override void InternalPart2()
@@ -38,9 +40,10 @@ public class Day01 : AdventBase
     }
 }
 ```
-* The properties `InputText` and `InputLines` load from the day's input file automatically.
-* The property `InputBlocks` is the day's input text split on double new lines, contains
-text and lines for each block.
+* The property `Input` loads the day's input file automatically,
+containing `Text` for the raw text, `Lines` split on new lines
+removing leading and trailing empty new lines, and `Blocks`
+which are split on double new lines.
 * Create a `new AdventSolutions()` at your entry point.
 * Select your day from the `AdventSolutions`, for example:
 ```csharp
@@ -73,13 +76,23 @@ then copy the value (long chain of numbers and letters) of the session cookie.
 * Run the command `dotnet user-secrets init`
 * Then `dotnet user-secrets set "session" "cookie"` but replace the word `cookie`
 with the actual cookie copied from the site.
-* After creating your `AdventSolutions` call `.DownloadInputsAsync()`
+* After pulling your day from `AdventSolutions` call `.DownloadInputAsync()`
 ```csharp
 var solutions = new AdventSolutions();
-await solutions.DownloadInputsAsync();
+var day = solutions.GetMostRecentDay();
+await day.DownloadInputAsync();
 ```
 This only downloads input files that aren't on disk, so if you need to replace
 one for whatever reason, you'll need to delete the old file first.
+
+## Submit Answers
+TODO: Write text.
+```csharp
+var solutions = new AdventSolutions();
+var day = solutions.GetMostRecentDay();
+day.Part2();
+await day.SubmitPart2Async();
+```
 
 ## Unit Testing
 Some extension methods such as `SetTestInput` which means `InputText` and 

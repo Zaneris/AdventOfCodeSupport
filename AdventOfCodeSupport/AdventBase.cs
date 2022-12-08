@@ -55,6 +55,11 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     private string? _part1;
     private string? _part2;
 
+    private string? _checkedPart1;
+    private string? _checkedPart2;
+
+    private bool _downloadedAnswers;
+
     /// <summary>
     /// Can be used for things like unit testing to pass information
     /// back to the test.
@@ -121,26 +126,40 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     }
 
     /// <summary>
-    /// Check answers against the confirmed submitted answer on AoC.
+    /// Check Part1() answer against the confirmed submitted answer on AoC.
     /// Must have set user secret session cookie.
     /// </summary>
     /// <returns>Whether or not each part is correct, or null if unable to verify.</returns>
-    public async Task<(bool? part1Correct, bool? part2Correct)> CheckAnswers()
+    public async Task<bool?> CheckPart1Async()
+    {
+        if (!_downloadedAnswers) await DownloadAnswers();
+        return CheckAnswer(1, _checkedPart1, _part1);
+    }
+
+    /// <summary>
+    /// Check Part2() answer against the confirmed submitted answer on AoC.
+    /// Must have set user secret session cookie.
+    /// </summary>
+    /// <returns>Whether or not each part is correct, or null if unable to verify.</returns>
+    public async Task<bool?> CheckPart2Async()
+    {
+        if (!_downloadedAnswers) await DownloadAnswers();
+        return CheckAnswer(2, _checkedPart2, _part2);
+    }
+
+    private async Task DownloadAnswers()
     {
         var client = new AdventClient();
-        var answers = await client.CheckDayAnswers(this);
-        var p1 = CheckAnswer(1, answers.Part1, _part1);
-        var p2 = CheckAnswer(2, answers.Part2, _part2);
-        return (p1, p2);
+        var answers = await client.DownloadAnswersAsync(this);
+        _checkedPart1 = answers.Part1;
+        _checkedPart2 = answers.Part2;
+        _downloadedAnswers = true;
     }
 
     private static bool? CheckAnswer(int part, string? verified, string? result)
     {
         if (result is null)
-        {
-            Console.WriteLine($"Run `day.Part{part}()` before calling `CheckAnswers()`.");
-            return null;
-        }
+            throw new Exception($"Run `day.Part{part}()` before calling `CheckAnswers()`.");
 
         if (verified is null)
         {
@@ -154,10 +173,52 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
         return verified == result;
     }
 
-    public async Task DownloadInput()
+    /// <summary>
+    /// Download day's input from AoC.
+    /// Must have set user secret session cookie.
+    /// </summary>
+    public async Task DownloadInputAsync()
     {
         var client = new AdventClient();
-        await client.DownloadDay(this);
+        await client.DownloadInputAsync(this);
+    }
+
+    /// <summary>
+    /// Checks if the day part already has a submitted answer, and if not, asks user if they'd
+    /// like to submit their Part1() result. Must have set user secret session cookie.
+    /// </summary>
+    /// <returns>True/false for correct answer submitted.</returns>
+    public async Task<bool> SubmitPart1Async()
+    {
+        if (!_downloadedAnswers) await DownloadAnswers();
+        if (_part1 is null) 
+            throw new Exception("Run `day.Part1()` before calling `SubmitPart1()`.");
+        if (_checkedPart1 is not null)
+        {
+            Console.WriteLine("Correct part 1 answer has already been submitted.");
+            return true;
+        }
+        var client = new AdventClient();
+        return await client.SubmitAnswerAsync(this, 1, _part1);
+    }
+
+    /// <summary>
+    /// Checks if the day part already has a submitted answer, and if not, asks user if they'd
+    /// like to submit their Part2() result. Must have set user secret session cookie.
+    /// </summary>
+    /// <returns>True/false for correct answer submitted.</returns>
+    public async Task<bool> SubmitPart2Async()
+    {
+        if (!_downloadedAnswers) await DownloadAnswers();
+        if (_part2 is null) 
+            throw new Exception("Run `day.Part2()` before calling `SubmitPart2()`.");
+        if (_checkedPart2 is not null)
+        {
+            Console.WriteLine("Correct part 2 answer has already been submitted.");
+            return true;
+        }
+        var client = new AdventClient();
+        return await client.SubmitAnswerAsync(this, 2, _part2);
     }
 
     /// <summary>
@@ -178,11 +239,5 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     public void SetTestInput(string? input)
     {
         _input = input is null ? null : new InputBlock(input);
-    }
-
-    private async Task<AdventClient.AdventAnswers> GetSubmittedAnswers()
-    {
-        var client = new AdventClient();
-        return await client.CheckDayAnswers(this);
     }
 }
