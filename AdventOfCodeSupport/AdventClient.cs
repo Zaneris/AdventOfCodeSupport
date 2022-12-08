@@ -18,7 +18,7 @@ internal class AdventClient
     private static HttpClient? _client;
 
     private readonly Exception _badClient =
-        new("Cannot download inputs/submit answers, user secret \"session\" has not been set.");
+        new("Cannot download inputs/submit answers, user secret \"session\" has not been set, check readme.");
 
     private static Dictionary<string, AdventAnswers>? _savedAnswers;
     private static Dictionary<string, AdventAnswers> SavedAnswers
@@ -33,9 +33,8 @@ internal class AdventClient
             }
 
             var text = File.ReadAllText("../../../Saved.json");
-            _savedAnswers = JsonSerializer.Deserialize<Dictionary<string, AdventAnswers>>(text)
-                            ?? new Dictionary<string, AdventAnswers>();
-            return _savedAnswers;
+            _savedAnswers = JsonSerializer.Deserialize<Dictionary<string, AdventAnswers>>(text);
+            return _savedAnswers ??= new Dictionary<string, AdventAnswers>();
         }
     }
 
@@ -80,7 +79,7 @@ internal class AdventClient
         await File.WriteAllTextAsync("../../../Saved.json", text);
     }
 
-    public async Task<AdventAnswers> DownloadAnswersAsync(IAoC day)
+    public async Task<AdventAnswers> DownloadAnswersAsync(IAoC day, string? testHtml)
     {
         if (SavedAnswers.TryGetValue($"{day.Year}-{day.Day}", out var saved))
         {
@@ -97,7 +96,7 @@ internal class AdventClient
         if (!result.IsSuccessStatusCode)
             throw new Exception($"Downloading answers {day.Year}-{day.Day} failed. {result.ReasonPhrase}");
         var html = await result.Content.ReadAsStringAsync();
-        await Task.Delay(1000); // Rate limit.
+        if (testHtml is null) await Task.Delay(1000); // Rate limit.
         var matches = regex.Matches(html);
         var answer = matches.Count switch
         {
@@ -117,20 +116,27 @@ internal class AdventClient
         return answer;
     }
 
-    public async Task<bool> SubmitAnswerAsync(IAoC day, int part, string submission)
+    public async Task<bool> SubmitAnswerAsync(IAoC day, int part, string submission, string? testHtml)
     {
-        if (_client is null) throw _badClient;
+        if (_client is null && testHtml is null) throw _badClient;
         var saved = SavedAnswers[$"{day.Year}-{day.Day}"];
         Console.WriteLine($"Submit Part {part} answer? (y/n):\n{submission}");
         var choice = Console.ReadLine()?.Trim().ToLower();
         if (choice != "y") return false;
-        HttpContent content = new StringContent($"level={part}&answer={submission}");
-        content.Headers.Clear();
-        content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-        var result = await _client.PostAsync($"{day.Year}/day/{day.Day}/answer", content);
-        if (!result.IsSuccessStatusCode)
-            throw new Exception($"Submission failed. {result.ReasonPhrase}");
-        var html = await result.Content.ReadAsStringAsync();
+
+        string html;
+        if (testHtml is null)
+        {
+            HttpContent content = new StringContent($"level={part}&answer={submission}");
+            content.Headers.Clear();
+            content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+            var result = await _client!.PostAsync($"{day.Year}/day/{day.Day}/answer", content);
+            if (!result.IsSuccessStatusCode)
+                throw new Exception($"Submission failed. {result.ReasonPhrase}");
+            html = await result.Content.ReadAsStringAsync();
+        }
+        else html = testHtml;
+
         var regexGoldStar = new Regex("gold star");
         var regexIncorrect = new Regex("not the right answer");
         var regexTooLow = new Regex("answer is too low");
@@ -155,7 +161,7 @@ internal class AdventClient
         if (match.Success)
             Console.WriteLine($"Please {match.Captures[0].Value} submitting again.");
 
-        await Task.Delay(2000); // Rate limit.
+        if (testHtml is null) await Task.Delay(2000); // Rate limit.
         return false;
     }
 }

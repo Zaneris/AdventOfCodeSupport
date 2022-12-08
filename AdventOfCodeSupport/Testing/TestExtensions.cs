@@ -24,4 +24,16 @@ public static class TestExtensions
     {
         return ((AdventBase)adventBase).Bag;
     }
+
+    /// <summary>
+    /// Set a custom HTML lookup/submission result to be used by CheckPartAsync
+    /// and SubmitPartAsync instead of the downloaded pages.
+    /// </summary>
+    /// <param name="adventBase">Extending interface.</param>
+    /// <param name="htmlSubmitResult">The custom HTML submission result to test with.</param>
+    /// <param name="htmlLookupResult">The custom HTML already submitted answer result to test with.</param>
+    public static void SetTestHtmlResults(this IAoC adventBase, string htmlSubmitResult, string htmlLookupResult)
+    {
+        ((AdventBase)adventBase).SetTestHtmlResults(htmlSubmitResult, htmlLookupResult);
+    }
 }

@@ -12,6 +12,16 @@ namespace AdventOfCodeSupport;
 [MemoryDiagnoser]
 public abstract class AdventBase : IAoC
 {
+    private InputBlock? _input;
+    private Dictionary<string, string>? _bag;
+    private string? _part1;
+    private string? _part2;
+    private string? _checkedPart1;
+    private string? _checkedPart2;
+    private string? _testHtmlSubmit;
+    private string? _testHtmlLookup;
+    private bool _downloadedAnswers;
+
     /// <summary>
     /// Year of solution.
     /// </summary>
@@ -22,7 +32,14 @@ public abstract class AdventBase : IAoC
     /// </summary>
     public int Day { get; }
 
-    private InputBlock? _input;
+    /// <summary>
+    /// Can be used for things like unit testing to pass information
+    /// back to the test.
+    /// </summary>
+    public Dictionary<string, string> Bag
+    {
+        get { return _bag ??= new Dictionary<string, string>(); }
+    }
 
     /// <summary>
     /// The entire text of the loaded input file.
@@ -48,25 +65,6 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
             }
             return _input;
         }
-    }
-
-    private Dictionary<string, string>? _bag;
-
-    private string? _part1;
-    private string? _part2;
-
-    private string? _checkedPart1;
-    private string? _checkedPart2;
-
-    private bool _downloadedAnswers;
-
-    /// <summary>
-    /// Can be used for things like unit testing to pass information
-    /// back to the test.
-    /// </summary>
-    public Dictionary<string, string> Bag
-    {
-        get { return _bag ??= new Dictionary<string, string>(); }
     }
 
     /// <summary>
@@ -150,7 +148,7 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     private async Task DownloadAnswers()
     {
         var client = new AdventClient();
-        var answers = await client.DownloadAnswersAsync(this);
+        var answers = await client.DownloadAnswersAsync(this, _testHtmlLookup);
         _checkedPart1 = answers.Part1;
         _checkedPart2 = answers.Part2;
         _downloadedAnswers = true;
@@ -199,7 +197,7 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
             return true;
         }
         var client = new AdventClient();
-        return await client.SubmitAnswerAsync(this, 1, _part1);
+        return await client.SubmitAnswerAsync(this, 1, _part1, _testHtmlSubmit);
     }
 
     /// <summary>
@@ -218,7 +216,7 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
             return true;
         }
         var client = new AdventClient();
-        return await client.SubmitAnswerAsync(this, 2, _part2);
+        return await client.SubmitAnswerAsync(this, 2, _part2, _testHtmlSubmit);
     }
 
     /// <summary>
@@ -239,5 +237,17 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     public void SetTestInput(string? input)
     {
         _input = input is null ? null : new InputBlock(input);
+    }
+
+    /// <summary>
+    /// Set a custom HTML lookup/submission result to be used by CheckPartAsync
+    /// and SubmitPartAsync instead of the downloaded pages.
+    /// </summary>
+    /// <param name="htmlSubmitResult">The custom HTML submission result to test with.</param>
+    /// <param name="htmlLookupResult">The custom HTML already submitted answer result to test with.</param>
+    public void SetTestHtmlResults(string htmlSubmitResult, string htmlLookupResult)
+    {
+        _testHtmlLookup = htmlLookupResult;
+        _testHtmlSubmit = htmlSubmitResult;
     }
 }
