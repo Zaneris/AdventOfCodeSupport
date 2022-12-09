@@ -1,16 +1,18 @@
-using AdventOfCodeSupport;
-using AdventOfCodeSupport.Testing;
-using PackageTests._2022;
-
 namespace PackageTests;
 
 public class PackageTests
 {
     private readonly AdventSolutions _solutions;
+    private readonly string _testHtmlCheckNoAnswers;
+    private readonly string _testHtmlCheckSingleAnswer;
+    private readonly string _testHtmlSubmitIncorrect;
 
     public PackageTests()
     {
         _solutions = new AdventSolutions();
+        _testHtmlCheckNoAnswers = File.ReadAllText("TestHtml/CheckNoAnswers.html");
+        _testHtmlSubmitIncorrect = File.ReadAllText("TestHtml/SubmitIncorrect.html");
+        _testHtmlCheckSingleAnswer = File.ReadAllText("TestHtml/CheckSingleAnswer.html");
     }
 
     public static IEnumerable<object[]> YearDays = new List<object[]>
@@ -114,6 +116,42 @@ public class PackageTests
     public void NoCollection_ConstructNewDay_ValidYearDay()
     {
         var day = new TestDay12();
-        Assert.True(day.Year == 2022 && day.Day == 12);
+        Assert.True(day is { Year: 2022, Day: 12 });
+    }
+
+    [Fact]
+    public async Task TestHtml_CheckAnswerAgainstNoAnswer_NullResult()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.SetTestHtmlResults(_testHtmlSubmitIncorrect, _testHtmlCheckNoAnswers);
+        var result = await day.CheckPart1Async();
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task TestHtml_CheckAnswerAgainstSingleAnswer_TrueResult()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.SetTestHtmlResults(_testHtmlSubmitIncorrect, _testHtmlCheckSingleAnswer);
+        var result = await day.CheckPart1Async();
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task TestHtml_SubmitAnswerWhenAlreadySubmitted_NullResult()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.SetTestHtmlResults(_testHtmlSubmitIncorrect, _testHtmlCheckSingleAnswer);
+        var result = await day.SubmitPart1Async();
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task TestHtml_SubmitAnswer_FalseResult()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.SetTestHtmlResults(_testHtmlSubmitIncorrect, _testHtmlCheckNoAnswers);
+        var result = await day.SubmitPart1Async();
+        Assert.False(result);
     }
 }

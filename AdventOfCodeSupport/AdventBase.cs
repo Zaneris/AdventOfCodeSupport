@@ -131,6 +131,7 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     public async Task<bool?> CheckPart1Async()
     {
         if (!_downloadedAnswers) await DownloadAnswers();
+        if (_part1 is null) Part1();
         return CheckAnswer(1, _checkedPart1, _part1);
     }
 
@@ -142,6 +143,7 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     public async Task<bool?> CheckPart2Async()
     {
         if (!_downloadedAnswers) await DownloadAnswers();
+        if (_part2 is null) Part2();
         return CheckAnswer(2, _checkedPart2, _part2);
     }
 
@@ -156,9 +158,6 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
 
     private static bool? CheckAnswer(int part, string? verified, string? result)
     {
-        if (result is null)
-            throw new Exception($"Run `day.Part{part}()` before calling `CheckAnswers()`.");
-
         if (verified is null)
         {
             Console.WriteLine($"Part {part} does not have a submitted accepted answer to check against.");
@@ -185,17 +184,17 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     /// Checks if the day part already has a submitted answer, and if not, asks user if they'd
     /// like to submit their Part1() result. Must have set user secret session cookie.
     /// </summary>
-    /// <returns>True/false for correct answer submitted.</returns>
-    public async Task<bool> SubmitPart1Async()
+    /// <returns>True/false for correct answer submitted, null for already submitted.</returns>
+    public async Task<bool?> SubmitPart1Async()
     {
         if (!_downloadedAnswers) await DownloadAnswers();
-        if (_part1 is null)
-            throw new Exception("Run `day.Part1()` before calling `SubmitPart1()`.");
         if (_checkedPart1 is not null)
         {
             Console.WriteLine("Correct part 1 answer has already been submitted.");
-            return true;
+            return null;
         }
+        if (_part1 is null) Part1();
+        if (_part1 is null) throw new Exception("Cannot submit a null answer for Part 1");
         var client = new AdventClient();
         return await client.SubmitAnswerAsync(this, 1, _part1, _testHtmlSubmit);
     }
@@ -204,17 +203,17 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     /// Checks if the day part already has a submitted answer, and if not, asks user if they'd
     /// like to submit their Part2() result. Must have set user secret session cookie.
     /// </summary>
-    /// <returns>True/false for correct answer submitted.</returns>
-    public async Task<bool> SubmitPart2Async()
+    /// <returns>True/false for correct answer submitted, null for already submitted.</returns>
+    public async Task<bool?> SubmitPart2Async()
     {
         if (!_downloadedAnswers) await DownloadAnswers();
-        if (_part2 is null)
-            throw new Exception("Run `day.Part2()` before calling `SubmitPart2()`.");
         if (_checkedPart2 is not null)
         {
             Console.WriteLine("Correct part 2 answer has already been submitted.");
-            return true;
+            return null;
         }
+        if (_part2 is null) Part2();
+        if (_part2 is null) throw new Exception("Cannot submit a null answer for Part 2");
         var client = new AdventClient();
         return await client.SubmitAnswerAsync(this, 2, _part2, _testHtmlSubmit);
     }

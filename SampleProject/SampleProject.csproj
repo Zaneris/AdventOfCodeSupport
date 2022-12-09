@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AdventOfCodeSupport\AdventOfCodeSupport.csproj" />
+        <PackageReference Include="AdventOfCodeSupport" Version="2.0.0-beta.1" />
     </ItemGroup>
 
 </Project>

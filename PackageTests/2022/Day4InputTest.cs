@@ -22,6 +22,6 @@ public class Day4InputTest : AdventBase
 
     protected override object InternalPart2()
     {
-        throw new NotImplementedException();
+        return 42;
     }
 }

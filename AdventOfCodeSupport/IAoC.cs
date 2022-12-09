@@ -35,7 +35,7 @@ public interface IAoC
     /// </summary>
     /// <returns>Whether or not each part is correct, or null if unable to verify.</returns>
     public Task<bool?> CheckPart1Async();
-    
+
     /// <summary>
     /// Check Part2() answer against the confirmed submitted answer on AoC.
     /// Must have set user secret session cookie.
@@ -53,15 +53,15 @@ public interface IAoC
     /// Checks if the day part already has a submitted answer, and if not, asks user if they'd
     /// like to submit their Part1() result. Must have set user secret session cookie.
     /// </summary>
-    /// <returns>True/false for correct answer submitted.</returns>
-    public Task<bool> SubmitPart1Async();
+    /// <returns>True/false for correct answer submitted, null for already submitted.</returns>
+    public Task<bool?> SubmitPart1Async();
 
     /// <summary>
     /// Checks if the day part already has a submitted answer, and if not, asks user if they'd
     /// like to submit their Part2() result. Must have set user secret session cookie.
     /// </summary>
-    /// <returns>True/false for correct answer submitted.</returns>
-    public Task<bool> SubmitPart2Async();
+    /// <returns>True/false for correct answer submitted, null for already submitted.</returns>
+    public Task<bool?> SubmitPart2Async();
 
     /// <summary>
     /// Benchmark part 1 and 2 of this day with BenchmarkDotNet.

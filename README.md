@@ -25,18 +25,22 @@ namespace Foo._2022;
 
 public class Day01 : AdventBase
 {
-    protected override void InternalPart1()
+    protected override object InternalPart1()
     {
         // Part 1 solution here.
         Console.WriteLine($"Characters: {Input.Text.Length}");
         Console.WriteLine($"Lines: {Input.Lines.Length}");
         Console.WriteLine($"Blocks: {Input.Blocks.Length}");
+        var partOneAnswer = 42;
+        return partOneAnswer;
     }
 
-    protected override void InternalPart2()
+    protected override object InternalPart2()
     {
         // Part 2 solution here.
         Bag["Foo"] = "Bar"; // Pass information to unit tests
+        var partTwoAnswer = "ArDKz";
+        return partTwoAnswer;
     }
 }
 ```
@@ -44,6 +48,7 @@ public class Day01 : AdventBase
 containing `Text` for the raw text, `Lines` split on new lines
 removing leading and trailing empty new lines, and `Blocks`
 which are split on double new lines.
+* Returned answers can be used by `SubmitPart1/2Async()` *see below.
 * Create a `new AdventSolutions()` at your entry point.
 * Select your day from the `AdventSolutions`, for example:
 ```csharp
@@ -86,12 +91,33 @@ This only downloads input files that aren't on disk, so if you need to replace
 one for whatever reason, you'll need to delete the old file first.
 
 ## Submit Answers
-TODO: Write text.
+If you'd like to submit your answers from code, follow the steps for the 
+user-secrets in the Download Input Files section above.
+
+Calling the submit methods first checks if a correct answer has already been submitted, 
+if yes, then returns null, if no, runs part code if it hasn't already ran, then asks 
+the user if they'd like to submit their answer. True/false will be returned accordingly, 
+as well as print the feedback to console from the attempted submission.
 ```csharp
 var solutions = new AdventSolutions();
 var day = solutions.GetMostRecentDay();
-day.Part2();
+await day.SubmitPart1Async();
 await day.SubmitPart2Async();
+```
+
+## Check Answers
+If you'd like to check your answers from code, follow the steps for the
+user-secrets in the Download Input Files section above. 
+
+These methods can be useful if you've already submitted a correct answer
+in the past, but would like to rework your solution to the day's puzzle.
+It will run the part if not already ran, and then compare your new answer to
+the correct answer you've previously submitted.
+```csharp
+var solutions = new AdventSolutions();
+var day = solutions.GetMostRecentDay();
+await day.CheckPart1Async();
+await day.CheckPart2Async();
 ```
 
 ## Unit Testing

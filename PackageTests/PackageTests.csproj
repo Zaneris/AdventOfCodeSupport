@@ -32,4 +32,16 @@
       <ProjectReference Include="..\AdventOfCodeSupport\AdventOfCodeSupport.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="TestHtml\CheckNoAnswers.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="TestHtml\SubmitIncorrect.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="TestHtml\CheckSingleAnswer.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

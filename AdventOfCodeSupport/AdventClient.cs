@@ -45,12 +45,12 @@ internal class AdventClient
         builder.AddUserSecrets(Assembly.GetEntryAssembly()!);
         var config = builder.Build();
         var cookie = config["session"];
-        if (string.IsNullOrWhiteSpace(cookie)) throw _badClient;
+        if (string.IsNullOrWhiteSpace(cookie)) return;
 
         var handler = new HttpClientHandler { UseCookies = false };
         _client = new HttpClient(handler) { BaseAddress = new Uri("https://adventofcode.com/") };
 
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.0.0-alpha.4");
+        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.0.0-beta.1");
         var comment = new ProductInfoHeaderValue("(+nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
         _client.DefaultRequestHeaders.UserAgent.Add(version);
         _client.DefaultRequestHeaders.UserAgent.Add(comment);
@@ -81,22 +81,28 @@ internal class AdventClient
 
     public async Task<AdventAnswers> DownloadAnswersAsync(IAoC day, string? testHtml)
     {
-        if (SavedAnswers.TryGetValue($"{day.Year}-{day.Day}", out var saved))
+        string html;
+        if (testHtml is null) // No need to download if using test HTML.
         {
-            if (saved.Part2 is not null) return saved;
-            var diff = DateTime.UtcNow - saved.Timestamp;
+            if (SavedAnswers.TryGetValue($"{day.Year}-{day.Day}", out var saved))
+            {
+                if (saved.Part2 is not null) return saved;
+                var diff = DateTime.UtcNow - saved.Timestamp;
 
-            // Rate limit checking for new answers to every 15 minutes.
-            if (diff <= new TimeSpan(0, 15, 0)) return saved;
+                // Rate limit checking for new answers to every 15 minutes.
+                if (diff <= new TimeSpan(0, 15, 0)) return saved;
+            }
+            if (_client is null) throw _badClient;
+            Console.WriteLine($"Downloading your already submitted answers {day.Year}-{day.Day}...");
+            var result = await _client!.GetAsync($"{day.Year}/day/{day.Day}");
+            if (!result.IsSuccessStatusCode)
+                throw new Exception($"Downloading answers {day.Year}-{day.Day} failed. {result.ReasonPhrase}");
+            html = await result.Content.ReadAsStringAsync();
+            await Task.Delay(1000); // Rate limit.
         }
-        if (_client is null) throw _badClient;
+        else html = testHtml;
+
         var regex = new Regex(@"Your puzzle answer was <code>(.+)<\/code>");
-        Console.WriteLine($"Downloading your already submitted answers {day.Year}-{day.Day}...");
-        var result = await _client.GetAsync($"{day.Year}/day/{day.Day}");
-        if (!result.IsSuccessStatusCode)
-            throw new Exception($"Downloading answers {day.Year}-{day.Day} failed. {result.ReasonPhrase}");
-        var html = await result.Content.ReadAsStringAsync();
-        if (testHtml is null) await Task.Delay(1000); // Rate limit.
         var matches = regex.Matches(html);
         var answer = matches.Count switch
         {
@@ -112,21 +118,21 @@ internal class AdventClient
             _ => new AdventAnswers()
         };
         SavedAnswers[$"{day.Year}-{day.Day}"] = answer;
-        await SaveAnswersAsync();
+        if (testHtml is null) await SaveAnswersAsync(); // Skip saving during unit tests.
         return answer;
     }
 
     public async Task<bool> SubmitAnswerAsync(IAoC day, int part, string submission, string? testHtml)
     {
-        if (_client is null && testHtml is null) throw _badClient;
         var saved = SavedAnswers[$"{day.Year}-{day.Day}"];
-        Console.WriteLine($"Submit Part {part} answer? (y/n):\n{submission}");
-        var choice = Console.ReadLine()?.Trim().ToLower();
-        if (choice != "y") return false;
 
         string html;
-        if (testHtml is null)
+        if (testHtml is null) // No need to download if using test HTML.
         {
+            if (_client is null) throw _badClient;
+            Console.WriteLine($"Submit Part {part} answer? (y/n):\n{submission}");
+            var choice = Console.ReadLine()?.Trim().ToLower();
+            if (choice != "y") return false;
             HttpContent content = new StringContent($"level={part}&answer={submission}");
             content.Headers.Clear();
             content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
@@ -148,7 +154,7 @@ internal class AdventClient
             if (part == 1) saved.Part1 = submission;
             else saved.Part2 = submission;
             saved.Timestamp = DateTime.UtcNow;
-            await SaveAnswersAsync();
+            if (testHtml is null) await SaveAnswersAsync();
             return true;
         }
         if (regexIncorrect.IsMatch(html))
