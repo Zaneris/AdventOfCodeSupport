@@ -13,15 +13,16 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageVersion>2.0.0-beta.1</PackageVersion>
+        <PackageVersion>2.0.0-beta.2</PackageVersion>
         <PackageReleaseNotes>- Submit answers from code.
 - Only check already submitted every 15 min.
 - Breaking changes:
-- InputLines -&gt; Input.Lines
-- InputTest -&gt; Input.Text
-- InputBlocks -&gt; Input.Blocks
-- override void InternalPart1() -&gt; override object InternalPart1()
-- solutions.DownloadInputsAsync -&gt; day.DownloadInputAsync</PackageReleaseNotes>
+- `InputLines` -&gt; `Input.Lines`
+- `InputTest` -&gt; `Input.Text`
+- `InputBlocks` -&gt; `Input.Blocks`
+- `override void InternalPart1()` -&gt; `override object InternalPart1()`
+- `solutions.DownloadInputsAsync()` -&gt; `day.DownloadInputAsync()`
+- added optional override `InternalOnLoad()`, runs prior to `Part1/2()`</PackageReleaseNotes>
         <PackageTags>aoc;adventofcode;advent;code;benchmark;benchmarkdotnet;</PackageTags>
     </PropertyGroup>
 

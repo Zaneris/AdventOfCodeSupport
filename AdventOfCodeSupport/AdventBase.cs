@@ -21,6 +21,7 @@ public abstract class AdventBase : IAoC
     private string? _testHtmlSubmit;
     private string? _testHtmlLookup;
     private bool _downloadedAnswers;
+    private bool _onLoad = false;
 
     /// <summary>
     /// Year of solution.
@@ -100,12 +101,31 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     protected abstract object InternalPart2();
 
     /// <summary>
+    /// Called before Part1/2 runs.
+    /// </summary>
+    protected virtual void InternalOnLoad() { }
+
+    /// <summary>
+    /// Just used to benchmark the InternalOnLoad() method.
+    /// </summary>
+    [Benchmark]
+    public void OnLoad()
+    {
+        InternalOnLoad();
+    }
+
+    /// <summary>
     /// Execute Part 1 of solution.
     /// </summary>
     /// <returns>Solution itself.</returns>
     [Benchmark]
     public IAoC Part1()
     {
+        if (!_onLoad)
+        {
+            InternalOnLoad();
+            _onLoad = true;
+        }
         _part1 = InternalPart1().ToString();
         Console.WriteLine($"Part 1: {_part1}");
         return this;
@@ -118,6 +138,11 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     [Benchmark]
     public IAoC Part2()
     {
+        if (!_onLoad)
+        {
+            InternalOnLoad();
+            _onLoad = true;
+        }
         _part2 = InternalPart2().ToString();
         Console.WriteLine($"Part 2: {_part2}");
         return this;
