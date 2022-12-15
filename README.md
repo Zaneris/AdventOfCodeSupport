@@ -25,6 +25,12 @@ namespace Foo._2022;
 
 public class Day01 : AdventBase
 {
+    protected override void InternalOnLoad()
+    {
+        // Optional override, runs before Part1/2.
+        // Benchmarked separately.
+    }
+    
     protected override object InternalPart1()
     {
         // Part 1 solution here.
@@ -38,7 +44,7 @@ public class Day01 : AdventBase
     protected override object InternalPart2()
     {
         // Part 2 solution here.
-        Bag["Foo"] = "Bar"; // Pass information to unit tests
+        Bag["Foo"] = "Bar"; // Pass information to unit tests.
         var partTwoAnswer = "ArDKz";
         return partTwoAnswer;
     }
