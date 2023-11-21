@@ -9,9 +9,9 @@ namespace AdventOfCodeSupport;
 /// <summary>
 /// Automatically collects all solution classes derived from AdventBase.
 /// </summary>
-public class AdventSolutions : IEnumerable<IAoC>
+public class AdventSolutions : IEnumerable<AdventBase>
 {
-    private readonly List<IAoC> _list = [];
+    private readonly List<AdventBase> _list = [];
     private readonly IConfiguration _config;
 
     /// <summary>
@@ -37,7 +37,7 @@ public class AdventSolutions : IEnumerable<IAoC>
     /// Enumerator for AoC solution days collected.
     /// </summary>
     /// <returns>Enumerator for AoC solution days collected.</returns>
-    public IEnumerator<IAoC> GetEnumerator()
+    public IEnumerator<AdventBase> GetEnumerator()
     {
         return _list.GetEnumerator();
     }
@@ -54,7 +54,7 @@ public class AdventSolutions : IEnumerable<IAoC>
     /// <param name="day">Day.</param>
     /// <returns>Matching solution.</returns>
     /// <exception cref="Exception">Not found.</exception>
-    public IAoC GetDay(int year, int day)
+    public AdventBase GetDay(int year, int day)
     {
         var result = _list.FirstOrDefault(x => x.Year == year && x.Day == day);
         if (result is null) throw new Exception($"""
@@ -72,7 +72,7 @@ public class AdventSolutions : IEnumerable<IAoC>
     /// <param name="year">Optional year.</param>
     /// <returns>Most recent solution.</returns>
     /// <exception cref="Exception">Collection empty.</exception>
-    public IAoC GetMostRecentDay(int? year = null)
+    public AdventBase GetMostRecentDay(int? year = null)
     {
         var result = year is null
             ? _list

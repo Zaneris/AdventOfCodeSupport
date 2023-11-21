@@ -10,7 +10,7 @@ namespace AdventOfCodeSupport;
 /// benchmarking support for BenchmarkDotNet.
 /// </summary>
 [MemoryDiagnoser]
-public abstract class AdventBase : IAoC
+public abstract class AdventBase
 {
     private InputBlock? _input;
     private Dictionary<string, string>? _bag;
@@ -121,7 +121,7 @@ public abstract class AdventBase : IAoC
     /// </summary>
     /// <returns>Solution itself.</returns>
     [Benchmark]
-    public IAoC Part1()
+    public AdventBase Part1()
     {
         if (!_onLoad)
         {
@@ -138,7 +138,7 @@ public abstract class AdventBase : IAoC
     /// </summary>
     /// <returns>Solution itself.</returns>
     [Benchmark]
-    public IAoC Part2()
+    public AdventBase Part2()
     {
         if (!_onLoad)
         {

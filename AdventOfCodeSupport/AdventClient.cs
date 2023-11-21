@@ -57,7 +57,7 @@ internal partial class AdventClient
         _client.DefaultRequestHeaders.Add("cookie", $"session={cookie}");
     }
 
-    public async Task DownloadInputAsync(IAoC day)
+    public async Task DownloadInputAsync(AdventBase day)
     {
         if (_client is null) throw _badClient;
         var path = $"../../../{day.Year}/Inputs/{day.Day:D2}.txt";
@@ -79,7 +79,7 @@ internal partial class AdventClient
         await File.WriteAllTextAsync("../../../Saved.json", text);
     }
 
-    public async Task<AdventAnswers> DownloadAnswersAsync(IAoC day, string? testHtml)
+    public async Task<AdventAnswers> DownloadAnswersAsync(AdventBase day, string? testHtml)
     {
         string html;
         if (testHtml is null) // No need to download if using test HTML.
@@ -122,7 +122,7 @@ internal partial class AdventClient
         return answer;
     }
 
-    public async Task<bool> SubmitAnswerAsync(IAoC day, int part, string submission, string? testHtml)
+    public async Task<bool> SubmitAnswerAsync(AdventBase day, int part, string submission, string? testHtml)
     {
         var saved = SavedAnswers[$"{day.Year}-{day.Day}"];
 
