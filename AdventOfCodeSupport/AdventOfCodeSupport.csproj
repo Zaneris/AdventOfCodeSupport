@@ -1,28 +1,35 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>AdventOfCodeSupport</Title>
         <Authors>Zaneris</Authors>
-        <Description>Supporting package for Advent of Code, auto-registers daily solutions, enables easy benchmarking with BenchmarkDotNet.</Description>
+        <Description>Supporting package for Advent of Code, auto-registers daily solutions, benchmark with BenchmarkDotNet, download input files, and submit answers.</Description>
         <PackageProjectUrl>https://github.com/Zaneris/AdventOfCodeSupport</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Zaneris/AdventOfCodeSupport</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageVersion>1.4.0</PackageVersion>
-        <PackageReleaseNotes>- Fixed InputLines removing leading whitespace.
-- Added InputBlocks, splits on double new lines.</PackageReleaseNotes>
+        <PackageVersion>2.0.0</PackageVersion>
+        <PackageReleaseNotes>- Submit answers from code.
+- Only check already submitted every 15 min.
+- Breaking changes:
+- `InputLines` -&gt; `Input.Lines`
+- `InputTest` -&gt; `Input.Text`
+- `InputBlocks` -&gt; `Input.Blocks`
+- `override void InternalPart1()` -&gt; `override object InternalPart1()`
+- `solutions.DownloadInputsAsync()` -&gt; `day.DownloadInputAsync()`
+- added optional override `InternalOnLoad()`, runs prior to `Part1/2()`</PackageReleaseNotes>
         <PackageTags>aoc;adventofcode;advent;code;benchmark;benchmarkdotnet;</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
         <None Include="..\README.md" Pack="true" PackagePath="\" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
     </ItemGroup>
 
 </Project>

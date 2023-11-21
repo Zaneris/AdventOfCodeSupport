@@ -4,22 +4,24 @@ namespace PackageTests._2022;
 
 public class Day4InputTest : AdventBase
 {
-    protected override void InternalPart1()
+    protected override object InternalPart1()
     {
-        Bag["Text"] = InputText;
-        Bag["Lines"] = InputLines.Length.ToString();
-        Bag["FirstLine"] = InputLines[0];
-        Bag["Blocks"] = InputBlocks.Length.ToString();
-        Bag["Block1Text"] = InputBlocks[0].Text;
-        Bag["Block1Lines"] = InputBlocks[0].Lines.Length.ToString();
-        if (InputBlocks.Length > 1)
+        Bag["Text"] = Input.Text;
+        Bag["Lines"] = Input.Lines.Length.ToString();
+        Bag["FirstLine"] = Input.Lines[0];
+        Bag["Blocks"] = Input.Blocks.Length.ToString();
+        Bag["Block1Text"] = Input.Blocks[0].Text;
+        Bag["Block1Lines"] = Input.Blocks[0].Lines.Length.ToString();
+        if (Input.Blocks.Length > 1)
         {
-            Bag["Block2Lines"] = InputBlocks[1].Lines.Length.ToString();
+            Bag["Block2Lines"] = Input.Blocks[1].Lines.Length.ToString();
         }
+
+        return "Test";
     }
 
-    protected override void InternalPart2()
+    protected override object InternalPart2()
     {
-        throw new NotImplementedException();
+        return 42;
     }
 }
