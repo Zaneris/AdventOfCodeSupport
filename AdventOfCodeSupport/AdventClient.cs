@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace AdventOfCodeSupport;
 
-internal class AdventClient
+internal partial class AdventClient
 {
     public class AdventAnswers
     {
@@ -143,12 +143,7 @@ internal class AdventClient
         }
         else html = testHtml;
 
-        var regexGoldStar = new Regex("gold star");
-        var regexIncorrect = new Regex("not the right answer");
-        var regexTooLow = new Regex("answer is too low");
-        var regexTooHigh = new Regex("answer is too high");
-        var waitBefore = new Regex("wait.+before");
-        if (regexGoldStar.IsMatch(html))
+        if (RegexGoldStar().IsMatch(html))
         {
             Console.WriteLine("You got a star!");
             if (part == 1) saved.Part1 = submission;
@@ -157,17 +152,28 @@ internal class AdventClient
             if (testHtml is null) await SaveAnswersAsync();
             return true;
         }
-        if (regexIncorrect.IsMatch(html))
+        if (RegexIncorrect().IsMatch(html))
             Console.WriteLine("That's not the right answer.");
-        if (regexTooHigh.IsMatch(html))
+        if (RegexTooHigh().IsMatch(html))
             Console.WriteLine("Your answer is too high.");
-        if (regexTooLow.IsMatch(html))
+        if (RegexTooLow().IsMatch(html))
             Console.WriteLine("Your answer is too low.");
-        var match = waitBefore.Match(html);
+        var match = RegexWaitBefore().Match(html);
         if (match.Success)
             Console.WriteLine($"Please {match.Captures[0].Value} submitting again.");
 
         if (testHtml is null) await Task.Delay(2000); // Rate limit.
         return false;
     }
+
+    [GeneratedRegex("gold star")]
+    private static partial Regex RegexGoldStar();
+    [GeneratedRegex("not the right answer")]
+    private static partial Regex RegexIncorrect();
+    [GeneratedRegex("answer is too low")]
+    private static partial Regex RegexTooLow();
+    [GeneratedRegex("answer is too high")]
+    private static partial Regex RegexTooHigh();
+    [GeneratedRegex("wait.+before")]
+    private static partial Regex RegexWaitBefore();
 }

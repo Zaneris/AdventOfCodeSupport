@@ -2,18 +2,10 @@ namespace PackageTests;
 
 public class PackageTests
 {
-    private readonly AdventSolutions _solutions;
-    private readonly string _testHtmlCheckNoAnswers;
-    private readonly string _testHtmlCheckSingleAnswer;
-    private readonly string _testHtmlSubmitIncorrect;
-
-    public PackageTests()
-    {
-        _solutions = new AdventSolutions();
-        _testHtmlCheckNoAnswers = File.ReadAllText("TestHtml/CheckNoAnswers.html");
-        _testHtmlSubmitIncorrect = File.ReadAllText("TestHtml/SubmitIncorrect.html");
-        _testHtmlCheckSingleAnswer = File.ReadAllText("TestHtml/CheckSingleAnswer.html");
-    }
+    private readonly AdventSolutions _solutions = new();
+    private readonly string _testHtmlCheckNoAnswers = File.ReadAllText("TestHtml/CheckNoAnswers.html");
+    private readonly string _testHtmlCheckSingleAnswer = File.ReadAllText("TestHtml/CheckSingleAnswer.html");
+    private readonly string _testHtmlSubmitIncorrect = File.ReadAllText("TestHtml/SubmitIncorrect.html");
 
     public static IEnumerable<object[]> YearDays = new List<object[]>
     {

@@ -60,9 +60,11 @@ public abstract class AdventBase : IAoC
             }
             catch (FileNotFoundException)
             {
-                throw new Exception(@$"Input not found for {Year} - Day {Day:D2}
-Please ensure input is saved to ""Project Root/{Year}/Inputs/{Day:D2}.txt""
-If no input for the day, disable in the constructor with : base({Year}, {Day}, false)");
+                throw new Exception($"""
+                                     Input not found for {Year} - Day {Day:D2}
+                                     Please ensure input is saved to "Project Root/{Year}/Inputs/{Day:D2}.txt"
+                                     If no input for the day, disable in the constructor with : base({Year}, {Day}, false)
+                                     """);
             }
             return _input;
         }
@@ -71,7 +73,7 @@ If no input for the day, disable in the constructor with : base({Year}, {Day}, f
     /// <summary>
     /// Registers self with AdventSolutions.
     /// </summary>
-    public AdventBase()
+    protected AdventBase()
     {
         var type = GetType();
         if (type.ToString().StartsWith("BenchmarkDotNet"))

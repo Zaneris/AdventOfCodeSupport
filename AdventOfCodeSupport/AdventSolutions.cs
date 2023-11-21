@@ -11,7 +11,7 @@ namespace AdventOfCodeSupport;
 /// </summary>
 public class AdventSolutions : IEnumerable<IAoC>
 {
-    private readonly List<IAoC> _list = new();
+    private readonly List<IAoC> _list = [];
     private readonly IConfiguration _config;
 
     /// <summary>
@@ -57,8 +57,10 @@ public class AdventSolutions : IEnumerable<IAoC>
     public IAoC GetDay(int year, int day)
     {
         var result = _list.FirstOrDefault(x => x.Year == year && x.Day == day);
-        if (result is null) throw new Exception(@$"Solution for Year: {year}, Day {day} was not found.
-Please ensure constructor calls : base({year}, {day}).");
+        if (result is null) throw new Exception($"""
+                                                 Solution for Year: {year}, Day {day} was not found.
+                                                 Please ensure constructor calls : base({year}, {day}).
+                                                 """);
         return result;
     }
 
@@ -80,8 +82,10 @@ Please ensure constructor calls : base({year}, {day}).");
             : _list
                 .Where(x => x.Year == year)
                 .MaxBy(x => x.Day);
-        if (result is null) throw new Exception(@"No solutions found.
-Please ensure constructor calls : base(year, day).");
+        if (result is null) throw new Exception("""
+                                                No solutions found.
+                                                Please ensure constructor calls : base(year, day).
+                                                """);
         return result;
     }
 
