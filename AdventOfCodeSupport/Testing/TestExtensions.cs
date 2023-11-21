@@ -11,18 +11,18 @@ public static class TestExtensions
     /// </summary>
     /// <param name="adventBase">Extending interface.</param>
     /// <param name="input">The custom input to test with.</param>
-    public static void SetTestInput(this IAoC adventBase, string? input)
+    public static void SetTestInput(this AdventBase adventBase, string? input)
     {
-        ((AdventBase)adventBase).SetTestInput(input);
+        adventBase.SetTestInput(input);
     }
 
     /// <summary>
     /// Versatile bag, assists with unit testing to pass information back to the test.
     /// </summary>
     /// <param name="adventBase">Extending interface.</param>
-    public static Dictionary<string, string> GetBag(this IAoC adventBase)
+    public static Dictionary<string, string> GetBag(this AdventBase adventBase)
     {
-        return ((AdventBase)adventBase).Bag;
+        return adventBase.Bag;
     }
 
     /// <summary>
@@ -32,8 +32,8 @@ public static class TestExtensions
     /// <param name="adventBase">Extending interface.</param>
     /// <param name="htmlSubmitResult">The custom HTML submission result to test with.</param>
     /// <param name="htmlLookupResult">The custom HTML already submitted answer result to test with.</param>
-    public static void SetTestHtmlResults(this IAoC adventBase, string htmlSubmitResult, string htmlLookupResult)
+    public static void SetTestHtmlResults(this AdventBase adventBase, string htmlSubmitResult, string htmlLookupResult)
     {
-        ((AdventBase)adventBase).SetTestHtmlResults(htmlSubmitResult, htmlLookupResult);
+        adventBase.SetTestHtmlResults(htmlSubmitResult, htmlLookupResult);
     }
 }
