@@ -146,4 +146,77 @@ public class PackageTests
         var result = await day.SubmitPart1Async();
         Assert.False(result);
     }
+
+    [Fact]
+    public void InputPattern_SetWithoutYear_Throws()
+    {
+        var exception = Record.Exception(() => AdventSolutions.ConfigureInputPattern("dd.txt"));
+        Assert.NotNull(exception);
+        Assert.IsType<Exception>(exception);
+        Assert.Contains("yyyy", exception.Message);
+    }
+
+    [Fact]
+    public void InputPattern_SetWithoutDay_Throws()
+    {
+        var exception = Record.Exception(() => AdventSolutions.ConfigureInputPattern("yyyy.txt"));
+        Assert.NotNull(exception);
+        Assert.IsType<Exception>(exception);
+        Assert.Contains("dd", exception.Message);
+    }
+
+    [Fact]
+    public void InputPattern_SetWithDayAndYear_DoesNotThrow()
+    {
+        var exception = Record.Exception(() => AdventSolutions.ConfigureInputPattern("yyyydd.txt"));
+        Assert.Null(exception);
+    }
+
+    [Fact]
+    public void InputPattern_SetWithoutFile_Throws()
+    {
+        var exception = Record.Exception(() => AdventSolutions.ConfigureInputPattern("yyyydd/Input/"));
+        Assert.NotNull(exception);
+        Assert.IsType<Exception>(exception);
+        Assert.Contains("filename", exception.Message);
+    }
+
+    [Fact]
+    public void InputPattern_SetWithLeadingSlashes_SlashesTrimmed()
+    {
+        AdventSolutions.ConfigureInputPattern(@"\\AllInputs\yyyydd.txt");
+        Assert.Equal("AllInputs/yyyydd.txt", AdventSolutions.InputPattern);
+    }
+
+    [Fact]
+    public void ClassPattern_SetWithoutYear_Throws()
+    {
+        var exception = Record.Exception(() => AdventSolutions.ConfigureClassNamePattern("Daydd.cs"));
+        Assert.NotNull(exception);
+        Assert.IsType<Exception>(exception);
+        Assert.Contains("yyyy", exception.Message);
+    }
+
+    [Fact]
+    public void ClassPattern_SetWithoutDay_Throws()
+    {
+        var exception = Record.Exception(() => AdventSolutions.ConfigureClassNamePattern("yyyy.cs"));
+        Assert.NotNull(exception);
+        Assert.IsType<Exception>(exception);
+        Assert.Contains("dd", exception.Message);
+    }
+
+    [Fact]
+    public void ClassPattern_SetWithDayAndYear_DoesNotThrow()
+    {
+        var exception = Record.Exception(() => AdventSolutions.ConfigureClassNamePattern("yyyydd.cs"));
+        Assert.Null(exception);
+    }
+
+    [Fact]
+    public void ClassPattern_SetWithDayAndYear_EqualToSetRemovesDotCs()
+    {
+        AdventSolutions.ConfigureClassNamePattern("yyyydd.cs");
+        Assert.Equal("yyyydd", AdventSolutions.ClassNamePattern);
+    }
 }

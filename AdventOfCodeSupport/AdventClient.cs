@@ -50,7 +50,7 @@ internal partial class AdventClient
         var handler = new HttpClientHandler { UseCookies = false };
         _client = new HttpClient(handler) { BaseAddress = new Uri("https://adventofcode.com/") };
 
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.0.0-beta.2");
+        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.1.0");
         var comment = new ProductInfoHeaderValue("(+nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
         _client.DefaultRequestHeaders.UserAgent.Add(version);
         _client.DefaultRequestHeaders.UserAgent.Add(comment);

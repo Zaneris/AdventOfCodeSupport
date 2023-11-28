@@ -198,7 +198,7 @@ public abstract class AdventBase
     }
 
     /// <summary>
-    /// Download day's input from AoC.
+    /// If not already downloaded, downloads the day's input.
     /// Must have set user secret session cookie.
     /// </summary>
     public async Task DownloadInputAsync()

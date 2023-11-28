@@ -12,7 +12,80 @@ namespace AdventOfCodeSupport;
 public class AdventSolutions : IEnumerable<AdventBase>
 {
     private readonly List<AdventBase> _list = [];
-    private readonly IConfiguration _config;
+
+    internal IConfiguration Config { get; }
+
+    /// <summary>
+    /// The input pattern being used to load and save input files. Set with <see cref="ConfigureInputPattern"/>
+    /// </summary>
+    public static string InputPattern { get; private set; } = "yyyy/Inputs/dd.txt";
+
+    /// <summary>
+    /// Pattern used to pull day and year from class names, if <c>null</c> the default pattern of 4 digit year in the
+    /// namespace and 2 digit day in the class name will be used. Set with <see cref="ConfigureClassNamePattern"/>
+    /// </summary>
+    public static string? ClassNamePattern { get; private set; } = null;
+
+    /// <summary>
+    /// Configure the pattern used for class names. <c>yyyy</c> is used to represent the 4 digit
+    /// year, and <c>dd</c> the 2 digit day. If the class name does not contain the 4 digit year, it must be set in
+    /// the namespace and this method can be ignored.
+    /// </summary>
+    /// <example>
+    /// Here is an example for a class named 202301.cs
+    /// <code>
+    /// AdventSolutions.ConfigureClassNamePattern("yyyydd.cs");
+    /// </code>
+    /// </example>
+    /// <param name="pattern">Must contain yyyy and dd. <c>null</c> will reset to the default.</param>
+    /// <exception cref="Exception">Pattern must contain yyyy and dd</exception>
+    public static void ConfigureClassNamePattern(string? pattern)
+    {
+        if (pattern is null)
+        {
+            ClassNamePattern = null;
+            return;
+        }
+        pattern = pattern.Replace(".cs", "");
+        if (!pattern.Contains("yyyy"))
+            throw new Exception("Input pattern must contain yyyy to represent 4 digit year.");
+        if (!pattern.Contains("dd"))
+            throw new Exception("Input pattern must contain dd to represent 2 digit day.");
+        pattern = pattern.Replace('\\', '/');
+        if (pattern.Contains('/'))
+            throw new Exception("Directory path is not required.");
+        ClassNamePattern = pattern;
+    }
+
+    /// <summary>
+    /// Configure the pattern used for saving and loading input files. <c>yyyy</c> is used to represent the 4 digit
+    /// year, and <c>dd</c> the 2 digit day.
+    /// </summary>
+    /// <example>
+    /// Here is an example that would load the 2023 input file for day 1 in file path 2023/Inputs/01.txt
+    /// <code>
+    /// solutions.ConfigureInputPattern("yyyy/Inputs/dd.txt");
+    /// </code>
+    /// </example>
+    /// <param name="pattern">Must contain yyyy and dd</param>
+    /// <returns>Self: <see cref="AdventSolutions"/></returns>
+    /// <exception cref="Exception">Pattern must contain yyyy and dd</exception>
+    public static void ConfigureInputPattern(string pattern)
+    {
+        if (!pattern.Contains("yyyy"))
+            throw new Exception("Input pattern must contain yyyy to represent 4 digit year.");
+        if (!pattern.Contains("dd"))
+            throw new Exception("Input pattern must contain dd to represent 2 digit day.");
+        pattern = pattern.Replace('\\', '/');
+        if (pattern.EndsWith('/'))
+            throw new Exception("Pattern must end with a filename, not a directory.");
+        while (pattern.StartsWith('/'))
+        {
+            pattern = pattern.Substring(1, pattern.Length - 1);
+        }
+
+        InputPattern = pattern;
+    }
 
     /// <summary>
     /// Create a new automatically generated collection of AoC solutions.
@@ -30,7 +103,7 @@ public class AdventSolutions : IEnumerable<AdventBase>
         }
         var builder = new ConfigurationBuilder();
         builder.AddUserSecrets(Assembly.GetEntryAssembly()!);
-        _config = builder.Build();
+        Config = builder.Build();
     }
 
     /// <summary>
@@ -93,7 +166,7 @@ public class AdventSolutions : IEnumerable<AdventBase>
     /// Benchmark all solutions.
     /// </summary>
     /// <param name="year">Optional year.</param>
-    /// <param name="config">Optional BenchmarkDotNet config.</param>
+    /// <param name="config">Optional <see cref="BenchmarkDotNet"/> config.</param>
     public void BenchmarkAll(int? year = null, IConfig? config = null)
     {
         var types = year is null
