@@ -8,6 +8,8 @@ namespace AdventOfCodeSupport;
 
 internal partial class AdventClient
 {
+    private readonly AdventSolutions _adventSolutions;
+
     public class AdventAnswers
     {
         public string? Part1 { get; set; }
@@ -38,8 +40,9 @@ internal partial class AdventClient
         }
     }
 
-    public AdventClient()
+    public AdventClient(AdventSolutions adventSolutions)
     {
+        _adventSolutions = adventSolutions;
         if (_client is not null) return;
         var builder = new ConfigurationBuilder();
         builder.AddUserSecrets(Assembly.GetEntryAssembly()!);
@@ -50,7 +53,7 @@ internal partial class AdventClient
         var handler = new HttpClientHandler { UseCookies = false };
         _client = new HttpClient(handler) { BaseAddress = new Uri("https://adventofcode.com/") };
 
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.0.0-beta.2");
+        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.1.0");
         var comment = new ProductInfoHeaderValue("(+nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
         _client.DefaultRequestHeaders.UserAgent.Add(version);
         _client.DefaultRequestHeaders.UserAgent.Add(comment);
@@ -60,10 +63,14 @@ internal partial class AdventClient
     public async Task DownloadInputAsync(AdventBase day)
     {
         if (_client is null) throw _badClient;
-        var path = $"../../../{day.Year}/Inputs/{day.Day:D2}.txt";
+        var inputPattern = _adventSolutions.InputPattern;
+        inputPattern = inputPattern.Replace("yyyy", $"{day.Year}");
+        inputPattern = inputPattern.Replace("dd", $"{day.Day:D2}");
+        var path = $"../../../{inputPattern}";
         if (File.Exists(path)) return;
         Console.WriteLine($"Downloading input {day.Year}-{day.Day}...");
-        Directory.CreateDirectory($"../../../{day.Year}/Inputs/");
+        var directory = Path.GetDirectoryName(path);
+        Directory.CreateDirectory($"{directory}");
         var result = await _client.GetAsync($"{day.Year}/day/{day.Day}/input");
         if (!result.IsSuccessStatusCode)
             throw new Exception($"Input download {day.Year}-{day.Day} failed. {result.ReasonPhrase}");
@@ -102,8 +109,7 @@ internal partial class AdventClient
         }
         else html = testHtml;
 
-        var regex = new Regex(@"Your puzzle answer was <code>(.+)<\/code>");
-        var matches = regex.Matches(html);
+        var matches = RegexAnswer().Matches(html);
         var answer = matches.Count switch
         {
             1 => new AdventAnswers
@@ -176,4 +182,6 @@ internal partial class AdventClient
     private static partial Regex RegexTooHigh();
     [GeneratedRegex("wait.+before")]
     private static partial Regex RegexWaitBefore();
+    [GeneratedRegex(@"Your puzzle answer was <code>(.+)<\/code>")]
+    private static partial Regex RegexAnswer();
 }

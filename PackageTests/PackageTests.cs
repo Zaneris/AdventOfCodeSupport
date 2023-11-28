@@ -1,5 +1,8 @@
 namespace PackageTests;
 
+/// <summary>
+/// Tests utilizing the pattern defaults
+/// </summary>
 public class PackageTests
 {
     private readonly AdventSolutions _solutions = new();
@@ -26,14 +29,14 @@ public class PackageTests
     public void DayTest_MostRecentDayNoYearSpecified_ReturnsLatestDayOfLatestYear()
     {
         var mostRecent = _solutions.GetMostRecentDay();
-        Assert.True(mostRecent.Year == 2022 && mostRecent.Day == 12);
+        Assert.True(mostRecent is { Year: 2022, Day: 12 });
     }
 
     [Fact]
     public void DayTest_MostRecentDayWithYear_ReturnsLatestDayOfSpecifiedYear()
     {
         var mostRecent = _solutions.GetMostRecentDay(2021);
-        Assert.True(mostRecent.Year == 2021 && mostRecent.Day == 25);
+        Assert.True(mostRecent is { Year: 2021, Day: 25 });
     }
 
     [Fact]
@@ -105,9 +108,10 @@ public class PackageTests
     }
 
     [Fact]
-    public void NoCollection_ConstructNewDay_ValidYearDay()
+    public void LoadDay_CheckDay12_ValidYearDay()
     {
-        var day = new TestDay12();
+        var day = _solutions.GetDay(2022, 12);
+        Assert.IsType<TestDay12>(day);
         Assert.True(day is { Year: 2022, Day: 12 });
     }
 

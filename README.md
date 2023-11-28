@@ -2,7 +2,7 @@
 This package provides support to simplify the process of storing each day's 
 puzzle within a single solution. Each day is automatically registered to a 
 central location, with built-in support for BenchmarkDotNet, downloading input files, and submitting answers.
-## Getting Started
+## Quick Start
 * Begin by adding this NuGet package to your project `AdventOfCodeSupport`.
 * Add a folder to your project for the current year i.e. `2023`.
 * Add a subfolder to the year called `Inputs`.
@@ -69,6 +69,30 @@ today.Part1().Part2();
 ```
 * Run your solution parts with `today.Part1().Part2()`.
 * Or benchmark them with `today.Benchmark()`, benchmarking requires running in Release.
+
+## Alternate Naming Patterns
+If instead of the structure provided in the quick start, you wished to have for example
+the structure show below.
+```text
+Project/
+├── Program.cs
+├── Year2023Day01.cs
+├── Year2023Day02.cs
+└── Inputs/
+    ├── 202301.txt
+    └── 202302.txt
+```
+You would instantiate your `AdventSolutions` as follows:
+```csharp
+using AdventOfCodeSupport;
+
+var solutions = new AdventSolutions("Inputs/yyyydd.txt", "YearyyyyDaydd.cs");
+var today = solutions.GetMostRecentDay();
+// var day3 = solutions.GetDay(2023, 3);
+// var day4 = solutions.First(x => x.Year == 2023 && x.Day == 4);
+today.Part1().Part2();
+// today.Benchmark();
+```
 
 ## Benchmarking
 There's 2 different ways you can benchmark your solutions with this package,

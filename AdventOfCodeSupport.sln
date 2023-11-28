@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageTests", "PackageTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleProject", "SampleProject\SampleProject.csproj", "{AF4CE1DF-2A94-4C0C-BEEC-F0703F3A8DE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltNamingTests", "AltNamingTests\AltNamingTests.csproj", "{AFDFA5E4-182C-4479-A219-5529AA4110A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{AF4CE1DF-2A94-4C0C-BEEC-F0703F3A8DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF4CE1DF-2A94-4C0C-BEEC-F0703F3A8DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF4CE1DF-2A94-4C0C-BEEC-F0703F3A8DE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFDFA5E4-182C-4479-A219-5529AA4110A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFDFA5E4-182C-4479-A219-5529AA4110A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFDFA5E4-182C-4479-A219-5529AA4110A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFDFA5E4-182C-4479-A219-5529AA4110A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

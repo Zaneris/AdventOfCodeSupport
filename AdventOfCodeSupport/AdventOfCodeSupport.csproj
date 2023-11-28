@@ -13,16 +13,8 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageVersion>2.0.0</PackageVersion>
-        <PackageReleaseNotes>- Submit answers from code.
-- Only check already submitted every 15 min.
-- Breaking changes:
-- `InputLines` -&gt; `Input.Lines`
-- `InputTest` -&gt; `Input.Text`
-- `InputBlocks` -&gt; `Input.Blocks`
-- `override void InternalPart1()` -&gt; `override object InternalPart1()`
-- `solutions.DownloadInputsAsync()` -&gt; `day.DownloadInputAsync()`
-- added optional override `InternalOnLoad()`, runs prior to `Part1/2()`</PackageReleaseNotes>
+        <PackageVersion>2.1.0</PackageVersion>
+        <PackageReleaseNotes>- Added ability to change class and input file naming patterns</PackageReleaseNotes>
         <PackageTags>aoc;adventofcode;advent;code;benchmark;benchmarkdotnet;</PackageTags>
     </PropertyGroup>
 
