@@ -10,8 +10,9 @@ namespace AdventOfCodeSupport;
 /// benchmarking support for BenchmarkDotNet.
 /// </summary>
 [MemoryDiagnoser]
-public abstract class AdventBase
+public abstract partial class AdventBase
 {
+    private AdventSolutions _adventSolutions = null!;
     private InputBlock? _input;
     private Dictionary<string, string>? _bag;
     private string? _part1;
@@ -26,12 +27,12 @@ public abstract class AdventBase
     /// <summary>
     /// Year of solution.
     /// </summary>
-    public int Year { get; }
+    public int Year { get; private set; }
 
     /// <summary>
     /// Day of solution i.e. 1-25.
     /// </summary>
-    public int Day { get; }
+    public int Day { get; private set; }
 
     /// <summary>
     /// Can be used for things like unit testing to pass information
@@ -50,19 +51,22 @@ public abstract class AdventBase
         get
         {
             if (_input is not null) return _input;
+            var inputPattern = _adventSolutions.InputPattern;
+            inputPattern = inputPattern.Replace("yyyy", $"{Year}");
+            inputPattern = inputPattern.Replace("dd", $"{Day:D2}");
             try
             {
                 var directory = new DirectoryInfo("../../../../").Name;
                 var isBenchmark = directory.StartsWith("net");
                 if (isBenchmark) Console.SetOut(TextWriter.Null);
                 var relative = isBenchmark ? "../../../../../../../" : "../../../";
-                _input = new InputBlock(File.ReadAllText($"{relative}{Year}/Inputs/{Day:D2}.txt"));
+                _input = new InputBlock(File.ReadAllText($"{relative}{inputPattern}"));
             }
-            catch (FileNotFoundException)
+            catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
             {
                 throw new Exception($"""
                                      Input not found for {Year} - Day {Day:D2}
-                                     Please ensure input is saved to "Project Root/{Year}/Inputs/{Day:D2}.txt"
+                                     Please ensure input is saved to "Project Root/{inputPattern}"
                                      If no input for the day, disable in the constructor with : base({Year}, {Day}, false)
                                      """);
             }
@@ -75,21 +79,46 @@ public abstract class AdventBase
     /// </summary>
     protected AdventBase()
     {
+        // Do nothing, handled from AdventSolutions.
+    }
+
+    /// <summary>
+    /// Registers self with AdventSolutions.
+    /// </summary>
+    internal void LoadYearDay(AdventSolutions adventSolutions)
+    {
+        _adventSolutions = adventSolutions;
         var type = GetType();
         if (type.ToString().StartsWith("BenchmarkDotNet"))
         {
             type = type.BaseType;
         }
+
         var split = type!.FullName!.Split('.');
-        var dayMatches = Regex.Matches(split[^1], @"0?(\d+)");
-        var yearMatches = Regex.Matches(split[^2], @"^_(\d+)$");
-        if (dayMatches.Count != 1 || dayMatches[0].Groups.Count != 2
-            || yearMatches.Count != 1 || yearMatches[0].Groups.Count != 2)
+        if (_adventSolutions.ClassNamePattern is null)
         {
-            throw new Exception($"Unable to automatically parse year/day from class: {type}");
+            var dayMatches = DayPattern().Matches(split[^1]);
+            var yearMatches = YearPattern().Matches(split[^2]);
+            if (dayMatches.Count != 1 || dayMatches[0].Groups.Count != 2
+                                      || yearMatches.Count != 1 || yearMatches[0].Groups.Count != 2)
+            {
+                throw new Exception($"Unable to automatically parse year/day from class: {type}");
+            }
+            Day = int.Parse(dayMatches[0].Groups[1].Value);
+            Year = int.Parse(yearMatches[0].Groups[1].Value);
+            return;
         }
-        Day = int.Parse(dayMatches[0].Groups[1].Value);
-        Year = int.Parse(yearMatches[0].Groups[1].Value);
+
+        var classPattern = _adventSolutions.ClassNamePattern;
+        classPattern = classPattern.Replace("yyyy", "(\\d{4})");
+        classPattern = classPattern.Replace("dd", "0?(\\d{1,2})");
+        var matches = Regex.Matches(split[^1], classPattern);
+        if (matches.Count != 1 || matches[0].Groups.Count != 3)
+            throw new Exception($"Unable to automatically parse year/day from class: {type}");
+        var group1 = int.Parse(matches[0].Groups[1].Value);
+        var group2 = int.Parse(matches[0].Groups[2].Value);
+        Day = group1 <= 31 ? group1 : group2;
+        Year = group1 > 31 ? group1 : group2;
     }
 
     /// <summary>
@@ -176,7 +205,7 @@ public abstract class AdventBase
 
     private async Task DownloadAnswers()
     {
-        var client = new AdventClient();
+        var client = new AdventClient(_adventSolutions);
         var answers = await client.DownloadAnswersAsync(this, _testHtmlLookup);
         _checkedPart1 = answers.Part1;
         _checkedPart2 = answers.Part2;
@@ -203,7 +232,7 @@ public abstract class AdventBase
     /// </summary>
     public async Task DownloadInputAsync()
     {
-        var client = new AdventClient();
+        var client = new AdventClient(_adventSolutions);
         await client.DownloadInputAsync(this);
     }
 
@@ -222,7 +251,7 @@ public abstract class AdventBase
         }
         if (_part1 is null) Part1();
         if (_part1 is null) throw new Exception("Cannot submit a null answer for Part 1");
-        var client = new AdventClient();
+        var client = new AdventClient(_adventSolutions);
         return await client.SubmitAnswerAsync(this, 1, _part1, _testHtmlSubmit);
     }
 
@@ -241,7 +270,7 @@ public abstract class AdventBase
         }
         if (_part2 is null) Part2();
         if (_part2 is null) throw new Exception("Cannot submit a null answer for Part 2");
-        var client = new AdventClient();
+        var client = new AdventClient(_adventSolutions);
         return await client.SubmitAnswerAsync(this, 2, _part2, _testHtmlSubmit);
     }
 
@@ -276,4 +305,9 @@ public abstract class AdventBase
         _testHtmlLookup = htmlLookupResult;
         _testHtmlSubmit = htmlSubmitResult;
     }
+
+    [GeneratedRegex(@"0?(\d{1,2})")]
+    private static partial Regex DayPattern();
+    [GeneratedRegex(@"(\d{4})")]
+    private static partial Regex YearPattern();
 }
