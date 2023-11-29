@@ -136,15 +136,19 @@ await day.SubmitPart2Async();
 ```
 
 ## ChatGPT Integration
-First ensure you've followed the steps under `Download Input Files` to initialize `dotnet user-secrets` and set the
-Advent of Code session cookie. 
+First a disclaimer that using this functionality will disqualify you from participation in the competition for the global
+leaderboard (top 100) as per https://adventofcode.com/about#faq_ai_leaderboard
 
-Next obtain your secret key from https://platform.openai.com/api-keys and run:
+Ensure you've followed the steps under `Download Input Files` to initialize `dotnet user-secrets` and set the
+Advent of Code session cookie. Next obtain your secret key from https://platform.openai.com/api-keys and run:
 ```text
 dotnet user-secrets set "secret" "key goes here"
 ```
 Now your next incorrect submission to AoC with `await day.SubmbitPart1/2Async()` will trigger automatic feedback
 to your attempted solution and be logged to console.
+
+[^1]: Disclaimer that using this functionality will disqualify you from participation in the competition for the global
+leaderboard as per https://adventofcode.com/about#faq_ai_leaderboard
 
 ## Check Answers
 If you'd like to check your answers from code, follow the steps for the
