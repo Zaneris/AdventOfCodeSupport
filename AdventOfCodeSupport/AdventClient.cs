@@ -11,6 +11,7 @@ namespace AdventOfCodeSupport;
 internal partial class AdventClient
 {
     private readonly AdventSolutions _adventSolutions;
+    private readonly AdventBase _calledBy;
 
     public class AdventAnswers
     {
@@ -59,9 +60,10 @@ internal partial class AdventClient
         }
     }
 
-    public AdventClient(AdventSolutions adventSolutions)
+    public AdventClient(AdventSolutions adventSolutions, AdventBase adventBase)
     {
         _adventSolutions = adventSolutions;
+        _calledBy = adventBase;
         if (_adventClient is not null) return;
         var builder = new ConfigurationBuilder();
         builder.AddUserSecrets(Assembly.GetEntryAssembly()!);
@@ -72,7 +74,7 @@ internal partial class AdventClient
         var handler = new HttpClientHandler { UseCookies = false };
         _adventClient = new HttpClient(handler) { BaseAddress = new Uri("https://adventofcode.com/") };
 
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.1.0");
+        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.2.0");
         var comment = new ProductInfoHeaderValue("(+nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
         _adventClient.DefaultRequestHeaders.UserAgent.Add(version);
         _adventClient.DefaultRequestHeaders.UserAgent.Add(comment);
@@ -205,36 +207,54 @@ internal partial class AdventClient
         {
             var actualRequest = _gptBaseRequest.DeepClone();
             var helpMe = _gptHelpMe.Replace("{num}", part.ToString());
-            var problem = ""; // TODO: Download + save problem text
-            var classText = ""; // TODO: Read class file text for puzzle day
+            var response = await _adventClient!.GetAsync($"{day.Year}/day/{day.Day}");
+            if (!response.IsSuccessStatusCode)
+                throw new Exception("Failed to download puzzle question to pass to ChatGPT");
+            html = await response.Content.ReadAsStringAsync();
+            var problem = RegexPuzzleProblem().Match(html).Value;
+            var classText = LocateClassText();
+            if (classText is null)
+                throw new Exception($"Unable to locate .cs file for {_calledBy.Year}-{_calledBy.Day}");
             actualRequest["messages"]!.AsArray().Add(new JsonObject
             {
                 ["role"] = "user",
                 ["content"] = $"{helpMe}\n{problem}\n{classText}"
             });
             Console.WriteLine("Incorrect answer, asking ChatGPT for help...");
-            var response = await _gptClient.PostAsJsonAsync("chat/completions", actualRequest);
+            response = await _gptClient.PostAsJsonAsync("chat/completions", actualRequest);
             if (!response.IsSuccessStatusCode)
+                throw new Exception("Failed to retrieve response from ChatGPT");
+            var json = await response.Content.ReadFromJsonAsync<JsonObject>();
+            if (json is not null && json.ContainsKey("choices") && json["choices"]!.AsArray().Count > 0)
             {
-                Console.WriteLine("Unable to complete ChatGPT request.");
+                var fix = json["choices"]![0]!["message"]!["content"]!.ToString();
+                Console.WriteLine(fix);
             }
-            else
-            {
-                var json = await response.Content.ReadFromJsonAsync<JsonObject>();
-                if (json is not null && json.ContainsKey("choices") && json["choices"]!.AsArray().Count > 0)
-                {
-                    var fix = json["choices"]![0]!["message"]!["content"]!.ToString();
-                    Console.WriteLine(fix);
-                }
-                else
-                {
-                    Console.WriteLine("Unable to complete ChatGPT request.");
-                }
-            }
+            else throw new Exception("Unexpected response from ChatGPT");
+
+            // TODO: Test all of this.
         }
 
         if (testHtml is null && _gptClient is null) await Task.Delay(2000); // Rate limit.
         return false;
+    }
+
+    private string? LocateClassText()
+    {
+        if (_adventSolutions.ClassNamePattern is null)
+        {
+            var directories = Directory.EnumerateDirectories("../../../", $"*{_calledBy.Year}*", SearchOption.AllDirectories);
+            var directoryPath = directories.FirstOrDefault(); // Take the first match
+            if (directoryPath is null) return null;
+            var files = Directory.EnumerateFiles(directoryPath, $"{_calledBy.ClassName}.cs", SearchOption.AllDirectories);
+            var filePath = files.FirstOrDefault();
+            if (filePath is null) return null;
+            return File.ReadAllText(filePath);
+        }
+        else
+        {
+            throw new NotImplementedException("ChatGPT help with custom patterns not yet supported.");
+        }
     }
 
     [GeneratedRegex("gold star")]
@@ -249,4 +269,6 @@ internal partial class AdventClient
     private static partial Regex RegexWaitBefore();
     [GeneratedRegex(@"Your puzzle answer was <code>(.+)<\/code>")]
     private static partial Regex RegexAnswer();
+    [GeneratedRegex(@"/<article class=""day-desc"">[\S\s]+<\/article>/gm")]
+    private static partial Regex RegexPuzzleProblem();
 }
