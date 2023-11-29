@@ -43,7 +43,7 @@ public abstract partial class AdventBase
         get { return _bag ??= new Dictionary<string, string>(); }
     }
 
-    internal string ClassName { get; private set; }
+    internal string ClassName { get; private set; } = null!;
 
     /// <summary>
     /// The entire text of the loaded input file.

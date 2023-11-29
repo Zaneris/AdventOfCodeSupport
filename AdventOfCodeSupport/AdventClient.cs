@@ -233,6 +233,7 @@ internal partial class AdventClient
             else throw new Exception("Unexpected response from ChatGPT");
 
             // TODO: Test all of this.
+            // TODO: Cache puzzle questions
         }
 
         if (testHtml is null && _gptClient is null) await Task.Delay(2000); // Rate limit.
@@ -253,7 +254,15 @@ internal partial class AdventClient
         }
         else
         {
-            throw new NotImplementedException("ChatGPT help with custom patterns not yet supported.");
+            var className = _adventSolutions.ClassNamePattern;
+            className = className.Replace("yyyy", $"{_calledBy.Year}");
+            className = className.Replace("dd", $"{_calledBy.Day:D2}");
+            className = $"{className}.cs";
+            var files = Directory.EnumerateFiles("../../../", className, SearchOption.AllDirectories);
+            // TODO: Replace all ../../../ with a project root constant
+            var filePath = files.FirstOrDefault();
+            if (filePath is null) return null;
+            return File.ReadAllText(filePath);
         }
     }
 
