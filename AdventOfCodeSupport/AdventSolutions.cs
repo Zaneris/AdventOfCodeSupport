@@ -136,6 +136,8 @@ public class AdventSolutions : IEnumerable<AdventBase>
         pattern = pattern.Replace('\\', '/');
         if (pattern.Contains('/'))
             throw new Exception("Directory path is not required.");
+        if (pattern.StartsWith("yyyy") || pattern.StartsWith("dd"))
+            throw new Exception("Class names cannot start with a number.");
         ClassNamePattern = pattern;
     }
 

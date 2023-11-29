@@ -7,15 +7,15 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>AdventOfCodeSupport</Title>
         <Authors>Zaneris</Authors>
-        <Description>Supporting package for Advent of Code, auto-registers daily solutions, benchmark with BenchmarkDotNet, download input files, and submit answers.</Description>
+        <Description>Support package for Advent of Code, download input files, submit answers, ChatGPT integration, and benchmark with BenchmarkDotNet.</Description>
         <PackageProjectUrl>https://github.com/Zaneris/AdventOfCodeSupport</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Zaneris/AdventOfCodeSupport</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageVersion>2.1.0</PackageVersion>
-        <PackageReleaseNotes>- Added ability to change class and input file naming patterns</PackageReleaseNotes>
-        <PackageTags>aoc;adventofcode;advent;code;benchmark;benchmarkdotnet;</PackageTags>
+        <PackageVersion>2.2.0</PackageVersion>
+        <PackageReleaseNotes>- Added ChatGPT integration for incorrect submission feedback</PackageReleaseNotes>
+        <PackageTags>aoc;adventofcode;advent;code;benchmark;benchmarkdotnet;chatgpt;gpt;</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

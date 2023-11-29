@@ -43,6 +43,8 @@ public abstract partial class AdventBase
         get { return _bag ??= new Dictionary<string, string>(); }
     }
 
+    internal string ClassName { get; private set; } = null!;
+
     /// <summary>
     /// The entire text of the loaded input file.
     /// </summary>
@@ -95,6 +97,7 @@ public abstract partial class AdventBase
         }
 
         var split = type!.FullName!.Split('.');
+        ClassName = split[^1];
         if (_adventSolutions.ClassNamePattern is null)
         {
             var dayMatches = DayPattern().Matches(split[^1]);
@@ -205,7 +208,7 @@ public abstract partial class AdventBase
 
     private async Task DownloadAnswers()
     {
-        var client = new AdventClient(_adventSolutions);
+        var client = new AdventClient(_adventSolutions, this);
         var answers = await client.DownloadAnswersAsync(this, _testHtmlLookup);
         _checkedPart1 = answers.Part1;
         _checkedPart2 = answers.Part2;
@@ -232,7 +235,7 @@ public abstract partial class AdventBase
     /// </summary>
     public async Task DownloadInputAsync()
     {
-        var client = new AdventClient(_adventSolutions);
+        var client = new AdventClient(_adventSolutions, this);
         await client.DownloadInputAsync(this);
     }
 
@@ -251,7 +254,7 @@ public abstract partial class AdventBase
         }
         if (_part1 is null) Part1();
         if (_part1 is null) throw new Exception("Cannot submit a null answer for Part 1");
-        var client = new AdventClient(_adventSolutions);
+        var client = new AdventClient(_adventSolutions, this);
         return await client.SubmitAnswerAsync(this, 1, _part1, _testHtmlSubmit);
     }
 
@@ -270,7 +273,7 @@ public abstract partial class AdventBase
         }
         if (_part2 is null) Part2();
         if (_part2 is null) throw new Exception("Cannot submit a null answer for Part 2");
-        var client = new AdventClient(_adventSolutions);
+        var client = new AdventClient(_adventSolutions, this);
         return await client.SubmitAnswerAsync(this, 2, _part2, _testHtmlSubmit);
     }
 
