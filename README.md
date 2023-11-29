@@ -147,9 +147,6 @@ dotnet user-secrets set "secret" "key goes here"
 Now your next incorrect submission to AoC with `await day.SubmbitPart1/2Async()` will trigger automatic feedback
 to your attempted solution and be logged to console.
 
-[^1]: Disclaimer that using this functionality will disqualify you from participation in the competition for the global
-leaderboard as per https://adventofcode.com/about#faq_ai_leaderboard
-
 ## Check Answers
 If you'd like to check your answers from code, follow the steps for the
 user-secrets in the Download Input Files section above. 
