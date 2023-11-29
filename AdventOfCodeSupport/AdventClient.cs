@@ -36,8 +36,7 @@ internal partial class AdventClient
         }
     };
 
-    private static string _gptHelpMe =
-        "I'm using C#/.NET to complete Advent of Code puzzles, I've provided the puzzle question for the day along with my attempt at the solution, I've received an incorrect response from Advent of Code for Part {num}, what could be wrong with Part {num}? Answer as briefly as possible, use code with comments.";
+    private const string GPT_HELP_ME = "I'm using C#/.NET to complete Advent of Code puzzles, I've provided the puzzle question for the day along with my attempt at the solution, I've received an incorrect response from Advent of Code for Part {num}, what could be wrong with Part {num}? Answer as briefly as possible, use code with comments.";
 
     private readonly Exception _badClient =
         new("Cannot download inputs/submit answers, user secret \"session\" has not been set, check readme.");
@@ -132,7 +131,7 @@ internal partial class AdventClient
             }
             if (_adventClient is null) throw _badClient;
             Console.WriteLine($"Downloading your already submitted answers {day.Year}-{day.Day}...");
-            var result = await _adventClient!.GetAsync($"{day.Year}/day/{day.Day}");
+            var result = await _adventClient.GetAsync($"{day.Year}/day/{day.Day}");
             if (!result.IsSuccessStatusCode)
                 throw new Exception($"Downloading answers {day.Year}-{day.Day} failed. {result.ReasonPhrase}");
             html = await result.Content.ReadAsStringAsync();
@@ -173,7 +172,7 @@ internal partial class AdventClient
             HttpContent content = new StringContent($"level={part}&answer={submission}");
             content.Headers.Clear();
             content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-            var result = await _adventClient!.PostAsync($"{day.Year}/day/{day.Day}/answer", content);
+            var result = await _adventClient.PostAsync($"{day.Year}/day/{day.Day}/answer", content);
             if (!result.IsSuccessStatusCode)
                 throw new Exception($"Submission failed. {result.ReasonPhrase}");
             html = await result.Content.ReadAsStringAsync();
@@ -202,41 +201,39 @@ internal partial class AdventClient
         if (_gptClient is null)
         {
             Console.WriteLine("Set dotnet user-secret \"secret\" with an OpenAI API key secret for auto ChatGPT help.");
+            if (testHtml is null) await Task.Delay(2000); // Rate limit.
+            return false;
         }
-        else
+
+        var actualRequest = _gptBaseRequest.DeepClone();
+        var helpMe = GPT_HELP_ME.Replace("{num}", part.ToString());
+        var response = await _adventClient!.GetAsync($"{day.Year}/day/{day.Day}");
+        if (!response.IsSuccessStatusCode)
+            throw new Exception("Failed to download puzzle question to pass to ChatGPT");
+        var problem = await response.Content.ReadAsStringAsync();
+        problem = RegexPuzzleProblem().Match(problem).Value;
+        var classText = LocateClassText();
+        if (classText is null)
+            throw new Exception($"Unable to locate .cs file for {_calledBy.Year}-{_calledBy.Day}");
+        actualRequest["messages"]!.AsArray().Add(new JsonObject
         {
-            var actualRequest = _gptBaseRequest.DeepClone();
-            var helpMe = _gptHelpMe.Replace("{num}", part.ToString());
-            var response = await _adventClient!.GetAsync($"{day.Year}/day/{day.Day}");
-            if (!response.IsSuccessStatusCode)
-                throw new Exception("Failed to download puzzle question to pass to ChatGPT");
-            html = await response.Content.ReadAsStringAsync();
-            var problem = RegexPuzzleProblem().Match(html).Value;
-            var classText = LocateClassText();
-            if (classText is null)
-                throw new Exception($"Unable to locate .cs file for {_calledBy.Year}-{_calledBy.Day}");
-            actualRequest["messages"]!.AsArray().Add(new JsonObject
-            {
-                ["role"] = "user",
-                ["content"] = $"{helpMe}\n{problem}\n{classText}"
-            });
-            Console.WriteLine("Incorrect answer, asking ChatGPT for help...");
-            response = await _gptClient.PostAsJsonAsync("chat/completions", actualRequest);
-            if (!response.IsSuccessStatusCode)
-                throw new Exception("Failed to retrieve response from ChatGPT");
-            var json = await response.Content.ReadFromJsonAsync<JsonObject>();
-            if (json is not null && json.ContainsKey("choices") && json["choices"]!.AsArray().Count > 0)
-            {
-                var fix = json["choices"]![0]!["message"]!["content"]!.ToString();
-                Console.WriteLine(fix);
-            }
-            else throw new Exception("Unexpected response from ChatGPT");
-
-            // TODO: Test all of this.
-            // TODO: Cache puzzle questions
+            ["role"] = "user",
+            ["content"] = $"{helpMe}\n{problem}\n{classText}"
+        });
+        Console.WriteLine("Incorrect answer, asking ChatGPT for help...");
+        response = await _gptClient.PostAsJsonAsync("chat/completions", actualRequest);
+        if (!response.IsSuccessStatusCode)
+            throw new Exception("Failed to retrieve response from ChatGPT");
+        var json = await response.Content.ReadFromJsonAsync<JsonObject>();
+        if (json is not null && json.ContainsKey("choices") && json["choices"]!.AsArray().Count > 0)
+        {
+            var fix = json["choices"]![0]!["message"]!["content"]!.ToString();
+            Console.WriteLine(fix);
         }
+        else throw new Exception("Unexpected response from ChatGPT");
 
-        if (testHtml is null && _gptClient is null) await Task.Delay(2000); // Rate limit.
+        // TODO: Cache puzzle questions
+
         return false;
     }
 
@@ -278,6 +275,6 @@ internal partial class AdventClient
     private static partial Regex RegexWaitBefore();
     [GeneratedRegex(@"Your puzzle answer was <code>(.+)<\/code>")]
     private static partial Regex RegexAnswer();
-    [GeneratedRegex(@"/<article class=""day-desc"">[\S\s]+<\/article>/gm")]
+    [GeneratedRegex("""<article class="day-desc">[\S\s]+<\/article>""")]
     private static partial Regex RegexPuzzleProblem();
 }
