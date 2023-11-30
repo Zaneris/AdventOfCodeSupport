@@ -4,13 +4,13 @@ namespace PackageTests._2022;
 
 public class TestDay12 : AdventBase
 {
-    protected override string InternalPart1()
+    protected override object InternalPart1()
     {
-        throw new NotImplementedException();
+        return 20221201;
     }
 
-    protected override string InternalPart2()
+    protected override object InternalPart2()
     {
-        throw new NotImplementedException();
+        return 20221202;
     }
 }
