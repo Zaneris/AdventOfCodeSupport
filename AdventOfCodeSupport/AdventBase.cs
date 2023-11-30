@@ -35,6 +35,41 @@ public abstract partial class AdventBase
     public int Day { get; private set; }
 
     /// <summary>
+    /// Answer for part 1. Will run <see cref="Part1"/> to calculate the answer if not already done.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown if <see cref="Part1"/> method fails to set answer.</exception>
+
+    public string Part1Answer
+    {
+        get
+        {
+            if (_part1 == null)
+            {
+                Part1();
+            }
+
+            return _part1 ?? throw new InvalidOperationException("Part1 answer was not set after running Part1().");
+        }
+    }
+
+    /// <summary>
+    /// Answer for part 2. Will run <see cref="Part2"/> to calculate the answer if not already done.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown if <see cref="Part2"/> method fails to set answer.</exception>
+    public string Part2Answer
+    {
+        get
+        {
+            if (_part2 == null)
+            {
+                Part2();
+            }
+
+            return _part2 ?? throw new InvalidOperationException("Part2 answer was not set after running Part2().");
+        }
+    }
+
+    /// <summary>
     /// Can be used for things like unit testing to pass information
     /// back to the test.
     /// </summary>
