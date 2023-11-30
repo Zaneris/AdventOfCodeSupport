@@ -11,9 +11,11 @@ public static class TestExtensions
     /// </summary>
     /// <param name="adventBase">Extending interface.</param>
     /// <param name="input">The custom input to test with.</param>
-    public static void SetTestInput(this AdventBase adventBase, string? input)
+    /// <returns><see cref="AdventBase"/> for chaining.</returns>
+    public static AdventBase SetTestInput(this AdventBase adventBase, string? input)
     {
         adventBase.SetTestInput(input);
+        return adventBase;
     }
 
     /// <summary>
@@ -32,8 +34,10 @@ public static class TestExtensions
     /// <param name="adventBase">Extending interface.</param>
     /// <param name="htmlSubmitResult">The custom HTML submission result to test with.</param>
     /// <param name="htmlLookupResult">The custom HTML already submitted answer result to test with.</param>
-    public static void SetTestHtmlResults(this AdventBase adventBase, string htmlSubmitResult, string htmlLookupResult)
+    /// <returns><see cref="AdventBase"/> for chaining.</returns>
+    public static AdventBase SetTestHtmlResults(this AdventBase adventBase, string htmlSubmitResult, string htmlLookupResult)
     {
         adventBase.SetTestHtmlResults(htmlSubmitResult, htmlLookupResult);
+        return adventBase;
     }
 }

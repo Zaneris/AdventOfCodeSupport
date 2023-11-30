@@ -38,7 +38,6 @@ public abstract partial class AdventBase
     /// Answer for part 1. Will run <see cref="Part1"/> to calculate the answer if not already done.
     /// </summary>
     /// <exception cref="InvalidOperationException">Thrown if <see cref="Part1"/> method fails to set answer.</exception>
-
     public string Part1Answer
     {
         get
