@@ -165,12 +165,14 @@ await day.CheckPart2Async();
 ## Unit Testing
 Some extension methods such as `SetTestInput` which means `InputText` and 
 `InputLines` will use that test input instead of the actual input file,
-along with `GetBag()` can help assist you with creating unit tests.
+along with `GetBag()` can help assist you with creating unit tests. `Part1Answer` and `Part2Answer`
+both run `Part1()` and `Part2()` respectively and call `ToString()`.
 ```csharp
 protected override void InternalPart1()
 {
     // Do some work then...
     Bag["Test"] = InputText; // Pass to unit test.
+    return 42; // Can be obtained with Part1Answer.
 }
 ```
 ```csharp
@@ -191,7 +193,7 @@ public class SampleTests
     {
         var day = _solutions.GetDay(2023, 4);
         day.SetTestInput("123");
-        day.Part1();
+        Assert.Equal("42", day.Part1Answer);
         Assert.StartsWith("123", day.GetBag()["Test"]);
     }
 }

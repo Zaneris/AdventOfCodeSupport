@@ -108,6 +108,20 @@ public class PackageTests
     }
 
     [Fact]
+    public void TestResponse_Part1Answer_EqualToExpectation()
+    {
+        var day = _solutions.GetDay(2022, 12);
+        Assert.Equal("20221201", day.Part1Answer);
+    }
+
+    [Fact]
+    public void TestResponse_Part2Answer_EqualToExpectation()
+    {
+        var day = _solutions.GetDay(2022, 12);
+        Assert.Equal("20221202", day.Part2Answer);
+    }
+
+    [Fact]
     public void LoadDay_CheckDay12_ValidYearDay()
     {
         var day = _solutions.GetDay(2022, 12);
