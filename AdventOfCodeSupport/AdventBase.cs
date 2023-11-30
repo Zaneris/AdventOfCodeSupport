@@ -114,14 +114,6 @@ public abstract partial class AdventBase
     /// <summary>
     /// Registers self with AdventSolutions.
     /// </summary>
-    protected AdventBase()
-    {
-        // Do nothing, handled from AdventSolutions.
-    }
-
-    /// <summary>
-    /// Registers self with AdventSolutions.
-    /// </summary>
     internal void LoadYearDay(AdventSolutions adventSolutions)
     {
         _adventSolutions = adventSolutions;
