@@ -12,7 +12,7 @@ namespace AdventOfCodeSupport;
 [MemoryDiagnoser]
 public abstract partial class AdventBase
 {
-    private AdventSolutions _adventSolutions = null!;
+    private AdventSolutions? _adventSolutions;
     private InputBlock? _input;
     private Dictionary<string, string>? _bag;
     private string? _part1;
@@ -38,7 +38,6 @@ public abstract partial class AdventBase
     /// Answer for part 1. Will run <see cref="Part1"/> to calculate the answer if not already done.
     /// </summary>
     /// <exception cref="InvalidOperationException">Thrown if <see cref="Part1"/> method fails to set answer.</exception>
-
     public string Part1Answer
     {
         get
@@ -88,7 +87,7 @@ public abstract partial class AdventBase
         get
         {
             if (_input is not null) return _input;
-            var inputPattern = _adventSolutions.InputPattern;
+            var inputPattern = _adventSolutions?.InputPattern ?? "yyyy/Inputs/dd.txt";
             inputPattern = inputPattern.Replace("yyyy", $"{Year}");
             inputPattern = inputPattern.Replace("dd", $"{Day:D2}");
             try
@@ -114,15 +113,7 @@ public abstract partial class AdventBase
     /// <summary>
     /// Registers self with AdventSolutions.
     /// </summary>
-    protected AdventBase()
-    {
-        // Do nothing, handled from AdventSolutions.
-    }
-
-    /// <summary>
-    /// Registers self with AdventSolutions.
-    /// </summary>
-    internal void LoadYearDay(AdventSolutions adventSolutions)
+    internal void LoadYearDay(AdventSolutions? adventSolutions)
     {
         _adventSolutions = adventSolutions;
         var type = GetType();
@@ -133,7 +124,7 @@ public abstract partial class AdventBase
 
         var split = type!.FullName!.Split('.');
         ClassName = split[^1];
-        if (_adventSolutions.ClassNamePattern is null)
+        if (_adventSolutions?.ClassNamePattern is null)
         {
             var dayMatches = DayPattern().Matches(split[^1]);
             var yearMatches = YearPattern().Matches(split[^2]);
@@ -180,6 +171,7 @@ public abstract partial class AdventBase
     [Benchmark]
     public void OnLoad()
     {
+        if (Year == 0) LoadYearDay(null);
         InternalOnLoad();
     }
 
@@ -190,6 +182,7 @@ public abstract partial class AdventBase
     [Benchmark]
     public AdventBase Part1()
     {
+        if (Year == 0) LoadYearDay(null);
         if (!_onLoad)
         {
             InternalOnLoad();
@@ -207,6 +200,7 @@ public abstract partial class AdventBase
     [Benchmark]
     public AdventBase Part2()
     {
+        if (Year == 0) LoadYearDay(null);
         if (!_onLoad)
         {
             InternalOnLoad();
@@ -243,7 +237,7 @@ public abstract partial class AdventBase
 
     private async Task DownloadAnswers()
     {
-        var client = new AdventClient(_adventSolutions, this);
+        var client = new AdventClient(_adventSolutions!, this);
         var answers = await client.DownloadAnswersAsync(this, _testHtmlLookup);
         _checkedPart1 = answers.Part1;
         _checkedPart2 = answers.Part2;
@@ -270,7 +264,7 @@ public abstract partial class AdventBase
     /// </summary>
     public async Task DownloadInputAsync()
     {
-        var client = new AdventClient(_adventSolutions, this);
+        var client = new AdventClient(_adventSolutions!, this);
         await client.DownloadInputAsync(this);
     }
 
@@ -289,7 +283,7 @@ public abstract partial class AdventBase
         }
         if (_part1 is null) Part1();
         if (_part1 is null) throw new Exception("Cannot submit a null answer for Part 1");
-        var client = new AdventClient(_adventSolutions, this);
+        var client = new AdventClient(_adventSolutions!, this);
         return await client.SubmitAnswerAsync(this, 1, _part1, _testHtmlSubmit);
     }
 
@@ -308,7 +302,7 @@ public abstract partial class AdventBase
         }
         if (_part2 is null) Part2();
         if (_part2 is null) throw new Exception("Cannot submit a null answer for Part 2");
-        var client = new AdventClient(_adventSolutions, this);
+        var client = new AdventClient(_adventSolutions!, this);
         return await client.SubmitAnswerAsync(this, 2, _part2, _testHtmlSubmit);
     }
 
