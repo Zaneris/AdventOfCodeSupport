@@ -24,6 +24,41 @@ public abstract partial class AdventBase
     private bool _downloadedAnswers;
     private bool _onLoad = false;
 
+    private static bool _isBenchmark;
+    private static string? _projectRoot;
+    internal static string ProjectRoot
+    {
+        get
+        {
+            if (_projectRoot is not null) return _projectRoot;
+            var directoryInfo = new DirectoryInfo("./");
+
+            while (directoryInfo != null)
+            {
+                var files = directoryInfo.GetFiles("*.csproj");
+                if (files.Length > 0)
+                {
+                    if (files[0].Name.StartsWith("BenchmarkDotNet"))
+                    {
+                        _isBenchmark = true;
+                        Console.SetOut(TextWriter.Null);
+                    }
+                    else
+                    {
+                        _projectRoot = Path.GetDirectoryName(files[0].FullName);
+                        break;
+                    }
+                }
+
+                directoryInfo = directoryInfo.Parent;
+            }
+
+            if (_projectRoot is null)
+                throw new DirectoryNotFoundException("Can't find project root.");
+            return _projectRoot;
+        }
+    }
+
     /// <summary>
     /// Year of solution.
     /// </summary>
@@ -92,11 +127,8 @@ public abstract partial class AdventBase
             inputPattern = inputPattern.Replace("dd", $"{Day:D2}");
             try
             {
-                var directory = new DirectoryInfo("../../../../").Name;
-                var isBenchmark = directory.StartsWith("net");
-                if (isBenchmark) Console.SetOut(TextWriter.Null);
-                var relative = isBenchmark ? "../../../../../../../" : "../../../";
-                _input = new InputBlock(File.ReadAllText($"{relative}{inputPattern}"));
+                Console.WriteLine($"{ProjectRoot}/{inputPattern}");
+                _input = new InputBlock(File.ReadAllText($"{ProjectRoot}/{inputPattern}"));
             }
             catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
             {
