@@ -47,13 +47,13 @@ internal partial class AdventClient
         get
         {
             if (_savedAnswers is not null) return _savedAnswers;
-            if (!File.Exists("../../../Saved.json"))
+            if (!File.Exists($"{AdventBase.ProjectRoot}/Saved.json"))
             {
                 _savedAnswers = new Dictionary<string, AdventAnswers>();
                 return _savedAnswers;
             }
 
-            var text = File.ReadAllText("../../../Saved.json");
+            var text = File.ReadAllText($"{AdventBase.ProjectRoot}/Saved.json");
             _savedAnswers = JsonSerializer.Deserialize<Dictionary<string, AdventAnswers>>(text);
             return _savedAnswers ??= new Dictionary<string, AdventAnswers>();
         }
@@ -73,7 +73,7 @@ internal partial class AdventClient
         var handler = new HttpClientHandler { UseCookies = false };
         _adventClient = new HttpClient(handler) { BaseAddress = new Uri("https://adventofcode.com/") };
 
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.3.1");
+        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.3.2");
         var comment = new ProductInfoHeaderValue("(+nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
         _adventClient.DefaultRequestHeaders.UserAgent.Add(version);
         _adventClient.DefaultRequestHeaders.UserAgent.Add(comment);
@@ -113,7 +113,7 @@ internal partial class AdventClient
     private static async Task SaveAnswersAsync()
     {
         var text = JsonSerializer.Serialize(SavedAnswers);
-        await File.WriteAllTextAsync("../../../Saved.json", text);
+        await File.WriteAllTextAsync($"{AdventBase.ProjectRoot}/Saved.json", text);
     }
 
     public async Task<AdventAnswers> DownloadAnswersAsync(AdventBase day, string? testHtml)
@@ -241,7 +241,7 @@ internal partial class AdventClient
     {
         if (_adventSolutions.ClassNamePattern is null)
         {
-            var directories = Directory.EnumerateDirectories("../../../", $"*{_calledBy.Year}*", SearchOption.AllDirectories);
+            var directories = Directory.EnumerateDirectories($"{AdventBase.ProjectRoot}/", $"*{_calledBy.Year}*", SearchOption.AllDirectories);
             var directoryPath = directories.FirstOrDefault(); // Take the first match
             if (directoryPath is null) return null;
             var files = Directory.EnumerateFiles(directoryPath, $"{_calledBy.ClassName}.cs", SearchOption.AllDirectories);
@@ -255,8 +255,7 @@ internal partial class AdventClient
             className = className.Replace("yyyy", $"{_calledBy.Year}");
             className = className.Replace("dd", $"{_calledBy.Day:D2}");
             className = $"{className}.cs";
-            var files = Directory.EnumerateFiles("../../../", className, SearchOption.AllDirectories);
-            // TODO: Replace all ../../../ with a project root constant
+            var files = Directory.EnumerateFiles($"{AdventBase.ProjectRoot}/", className, SearchOption.AllDirectories);
             var filePath = files.FirstOrDefault();
             if (filePath is null) return null;
             return File.ReadAllText(filePath);

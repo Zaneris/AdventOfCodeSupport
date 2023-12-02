@@ -13,8 +13,8 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageVersion>2.3.1</PackageVersion>
-        <PackageReleaseNotes>- Fixed benchmarking</PackageReleaseNotes>
+        <PackageVersion>2.3.2</PackageVersion>
+        <PackageReleaseNotes>- Fixed issue with loading input files when using dotnet run</PackageReleaseNotes>
         <PackageTags>aoc;adventofcode;advent;code;benchmark;benchmarkdotnet;chatgpt;gpt;</PackageTags>
     </PropertyGroup>
 
