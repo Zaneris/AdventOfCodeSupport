@@ -24,23 +24,21 @@ public abstract partial class AdventBase
     private bool _downloadedAnswers;
     private bool _onLoad = false;
 
-    private static bool _isBenchmark;
     private static string? _projectRoot;
     internal static string ProjectRoot
     {
         get
         {
             if (_projectRoot is not null) return _projectRoot;
-            var directoryInfo = new DirectoryInfo("./");
+            var directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
 
             while (directoryInfo != null)
             {
-                var files = directoryInfo.GetFiles("*.csproj");
+                var files = directoryInfo.GetFiles("*.csproj", SearchOption.TopDirectoryOnly);
                 if (files.Length > 0)
                 {
                     if (files[0].Name.StartsWith("BenchmarkDotNet"))
                     {
-                        _isBenchmark = true;
                         Console.SetOut(TextWriter.Null);
                     }
                     else
@@ -128,7 +126,7 @@ public abstract partial class AdventBase
             try
             {
                 Console.WriteLine($"{ProjectRoot}/{inputPattern}");
-                _input = new InputBlock(File.ReadAllText($"{ProjectRoot}/{inputPattern}"));
+                _input = new InputBlock(File.ReadAllText(Path.Combine(ProjectRoot, inputPattern)));
             }
             catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
             {
