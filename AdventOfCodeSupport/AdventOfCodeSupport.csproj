@@ -13,14 +13,19 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageVersion>2.3.3</PackageVersion>
-        <PackageReleaseNotes>- Minor fixes</PackageReleaseNotes>
+        <PackageVersion>2.4.0</PackageVersion>
+        <PackageReleaseNotes>
+            - Added Input.Bytes
+            - Added Input.Span
+            - Added Input.Span2D
+        </PackageReleaseNotes>
         <PackageTags>aoc;adventofcode;advent;code;benchmark;benchmarkdotnet;chatgpt;gpt;</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
         <None Include="..\README.md" Pack="true" PackagePath="\" />
+        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.2.2" />
         <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
     </ItemGroup>
 

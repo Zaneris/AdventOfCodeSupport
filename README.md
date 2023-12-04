@@ -37,6 +37,9 @@ public class Day01 : AdventBase
         Console.WriteLine($"Characters: {Input.Text.Length}");
         Console.WriteLine($"Lines: {Input.Lines.Length}");
         Console.WriteLine($"Blocks: {Input.Blocks.Length}");
+        var bytes = Input.Bytes;
+        var span = Input.Span;
+        var span2d = Input.Span2D;
         var partOneAnswer = 42;
         return partOneAnswer;
     }
@@ -185,6 +188,7 @@ public class SampleTests
 
     public SampleTests()
     {
+        Assembly.Load("MyProject"); // Use actual project name containing your solutions
         _solutions = new AdventSolutions();
     }
     
