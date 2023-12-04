@@ -59,7 +59,7 @@ internal partial class AdventClient
         }
     }
 
-    public AdventClient(AdventSolutions adventSolutions, AdventBase adventBase)
+    internal AdventClient(AdventSolutions adventSolutions, AdventBase adventBase)
     {
         _adventSolutions = adventSolutions;
         _calledBy = adventBase;
@@ -73,7 +73,7 @@ internal partial class AdventClient
         var handler = new HttpClientHandler { UseCookies = false };
         _adventClient = new HttpClient(handler) { BaseAddress = new Uri("https://adventofcode.com/") };
 
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.3.3");
+        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.4.0");
         var comment = new ProductInfoHeaderValue("(+nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
         _adventClient.DefaultRequestHeaders.UserAgent.Add(version);
         _adventClient.DefaultRequestHeaders.UserAgent.Add(comment);

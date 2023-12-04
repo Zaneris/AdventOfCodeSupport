@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.RegularExpressions;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
@@ -22,7 +23,7 @@ public abstract partial class AdventBase
     private string? _testHtmlSubmit;
     private string? _testHtmlLookup;
     private bool _downloadedAnswers;
-    private bool _onLoad = false;
+    private bool _onLoad;
 
     private static string? _projectRoot;
     internal static string ProjectRoot
@@ -126,7 +127,7 @@ public abstract partial class AdventBase
             try
             {
                 Console.WriteLine($"{ProjectRoot}/{inputPattern}");
-                _input = new InputBlock(File.ReadAllText(Path.Combine(ProjectRoot, inputPattern)));
+                _input = new InputBlock(File.ReadAllBytes(Path.Combine(ProjectRoot, inputPattern)));
             }
             catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
             {
@@ -353,7 +354,7 @@ public abstract partial class AdventBase
     /// <param name="input">The custom input to test with.</param>
     public void SetTestInput(string? input)
     {
-        _input = input is null ? null : new InputBlock(input);
+        _input = input is null ? null : new InputBlock(Encoding.UTF8.GetBytes(input));
     }
 
     /// <summary>
