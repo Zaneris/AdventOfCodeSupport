@@ -73,7 +73,7 @@ internal partial class AdventClient
         var handler = new HttpClientHandler { UseCookies = false };
         _adventClient = new HttpClient(handler) { BaseAddress = new Uri("https://adventofcode.com/") };
 
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.4.1");
+        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.4.2");
         var comment = new ProductInfoHeaderValue("(+nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
         _adventClient.DefaultRequestHeaders.UserAgent.Add(version);
         _adventClient.DefaultRequestHeaders.UserAgent.Add(comment);
@@ -96,7 +96,7 @@ internal partial class AdventClient
         var inputPattern = _adventSolutions.InputPattern;
         inputPattern = inputPattern.Replace("yyyy", $"{day.Year}");
         inputPattern = inputPattern.Replace("dd", $"{day.Day:D2}");
-        var path = $"../../../{inputPattern}";
+        var path = Path.Combine(AdventBase.ProjectRoot, inputPattern);
         if (File.Exists(path)) return;
         Console.WriteLine($"Downloading input {day.Year}-{day.Day}...");
         var directory = Path.GetDirectoryName(path);
