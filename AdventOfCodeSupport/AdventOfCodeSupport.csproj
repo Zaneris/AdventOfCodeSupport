@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -13,18 +13,18 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageVersion>2.4.2</PackageVersion>
+        <PackageVersion>2.4.3</PackageVersion>
         <PackageReleaseNotes>
-            - Inputs now download to correct directory when running from terminal
+            - .NET 9
         </PackageReleaseNotes>
         <PackageTags>aoc;adventofcode;advent;code;benchmark;benchmarkdotnet;chatgpt;gpt;</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.13.11" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
         <None Include="..\README.md" Pack="true" PackagePath="\" />
-        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.2.2" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
+        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.3.2" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
     </ItemGroup>
 
 </Project>
