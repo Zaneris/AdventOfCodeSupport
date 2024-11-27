@@ -4,14 +4,14 @@ puzzle within a single solution. Each day is automatically registered to a
 central location, with built-in support for BenchmarkDotNet, downloading input files, and submitting answers.
 ## Quick Start
 * Begin by adding this NuGet package to your project `AdventOfCodeSupport`.
-* Add a folder to your project for the current year i.e. `2023`.
+* Add a folder to your project for the current year i.e. `2024`.
 * Add a subfolder to the year called `Inputs`.
 * Place each day's input into that folder named by day with 2 digits `01.txt`.
-* Create a class in the `2023` folder called `Day01.cs`
+* Create a class in the `2024` folder called `Day01.cs`
 ```text
 Project/
 ├── Program.cs
-└── 2023/
+└── 2024/
     ├── Day01.cs
     ├── Day02.cs
     └── Inputs/
@@ -21,7 +21,7 @@ Project/
 ```csharp
 using AdventOfCodeSupport;
 
-namespace Foo._2023;
+namespace Foo._2024;
 
 public class Day01 : AdventBase
 {
@@ -65,8 +65,8 @@ using AdventOfCodeSupport;
 
 var solutions = new AdventSolutions();
 var today = solutions.GetMostRecentDay();
-// var day3 = solutions.GetDay(2023, 3);
-// var day4 = solutions.First(x => x.Year == 2023 && x.Day == 4);
+// var day3 = solutions.GetDay(2024, 3);
+// var day4 = solutions.First(x => x.Year == 2024 && x.Day == 4);
 today.Part1().Part2();
 // today.Benchmark();
 ```
@@ -79,11 +79,11 @@ the structure show below.
 ```text
 Project/
 ├── Program.cs
-├── Year2023Day01.cs
-├── Year2023Day02.cs
+├── Year2024Day01.cs
+├── Year2024Day02.cs
 └── Inputs/
-    ├── 202301.txt
-    └── 202302.txt
+    ├── 202401.txt
+    └── 202402.txt
 ```
 You would instantiate your `AdventSolutions` as follows:
 ```csharp
@@ -91,8 +91,8 @@ using AdventOfCodeSupport;
 
 var solutions = new AdventSolutions("Inputs/yyyydd.txt", "YearyyyyDaydd.cs");
 var today = solutions.GetMostRecentDay();
-// var day3 = solutions.GetDay(2023, 3);
-// var day4 = solutions.First(x => x.Year == 2023 && x.Day == 4);
+// var day3 = solutions.GetDay(2024, 3);
+// var day4 = solutions.First(x => x.Year == 2024 && x.Day == 4);
 today.Part1().Part2();
 // today.Benchmark();
 ```
@@ -195,7 +195,7 @@ public class SampleTests
     [Fact]
     public void InputTest_CustomInput_TextLoaded()
     {
-        var day = _solutions.GetDay(2023, 4);
+        var day = _solutions.GetDay(2024, 4);
         day.SetTestInput("123");
         Assert.Equal("42", day.Part1Answer);
         Assert.StartsWith("123", day.GetBag()["Test"]);
