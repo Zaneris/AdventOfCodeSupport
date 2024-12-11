@@ -122,6 +122,16 @@ public class PackageTests
     }
 
     [Fact]
+    public void InputTest_Span2D_RowsColsAsExpected()
+    {
+        var day = _solutions.GetDay(2022, 7);
+        day.Part1();
+        Assert.Equal("10", day.GetBag()["Cols"]);
+        Assert.Equal("6", day.GetBag()["Rows"]);
+        Assert.Equal("9", day.GetBag()["Last"]);
+    }
+
+    [Fact]
     public void TestResponse_Part1Answer_EqualToExpectation()
     {
         var day = _solutions.GetDay(2022, 12);
