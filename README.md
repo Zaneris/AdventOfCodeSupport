@@ -155,6 +155,7 @@ await day.Part1Sample(42).SubmitPart1Async();
 
 If Part 1 using the sample input file does not return 42, this will throw and prevent `SubmitPart1Async`
 from ever being reached.
+#### Avoid caching, reinitialize your fields/properties in Part1/2 or OnLoad.
 
 ## Submit Answers
 If you'd like to submit your answers from code, follow the steps for the 

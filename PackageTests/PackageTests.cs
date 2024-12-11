@@ -173,6 +173,17 @@ public class PackageTests
     }
 
     [Fact]
+    public async Task TestHtml_CheckAnswerAgainstSingleAnswerWithSample_TrueResult()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.SetTestHtmlResults(_testHtmlSubmitIncorrect, _testHtmlCheckSingleAnswer);
+
+        day.Part1Sample("Sample04");
+        var result = await day.CheckPart1Async();
+        Assert.True(result);
+    }
+
+    [Fact]
     public async Task TestHtml_SubmitAnswerWhenAlreadySubmitted_NullResult()
     {
         var day = _solutions.GetDay(2022, 4);
