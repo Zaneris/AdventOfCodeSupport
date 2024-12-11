@@ -16,6 +16,7 @@
         <PackageVersion>2.5.0</PackageVersion>
         <PackageReleaseNotes>
             - Add Part1Sample and Part2Sample, these utilize new files Sample01.txt and optional Sample01P2.txt in the Inputs folder and throw if the check fails
+            - Span2D CRLF fix
         </PackageReleaseNotes>
         <PackageTags>aoc;adventofcode;advent;code;benchmark;benchmarkdotnet;chatgpt;gpt;</PackageTags>
     </PropertyGroup>
