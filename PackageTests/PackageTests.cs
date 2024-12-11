@@ -48,6 +48,20 @@ public class PackageTests
     }
 
     [Fact]
+    public void SampleInputTest_AllText_SampleFileUsed()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.Part1Sample("Sample04").Part2Sample("Sample04P2");
+    }
+
+    [Fact]
+    public void SampleInputTest_AllText_SampleP2Skipped()
+    {
+        var day = _solutions.GetDay(2022, 6);
+        day.Part1Sample("Sample06").Part2Sample("Sample06");
+    }
+
+    [Fact]
     public void InputTest_CustomInput_TextLoaded()
     {
         var day = _solutions.GetDay(2022, 4);

@@ -1,8 +1,6 @@
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 
@@ -21,22 +19,6 @@ internal partial class AdventClient
     }
 
     private static HttpClient? _adventClient;
-    private static HttpClient? _gptClient;
-
-    private static readonly JsonObject _gptBaseRequest = new()
-    {
-        ["model"] = "gpt-4-1106-preview",
-        ["messages"] = new JsonArray
-        {
-            new JsonObject
-            {
-                ["role"] = "system",
-                ["content"] = "You are an expert at Advent of Code puzzles, you love to explain things using just code and code comments, english is a burden."
-            }
-        }
-    };
-
-    private const string GPT_HELP_ME = "I'm using C#/.NET to complete Advent of Code puzzles, I've provided the puzzle question for the day along with my attempt at the solution, I've received an incorrect response from Advent of Code for Part {num}, what could be wrong with Part {num}? Answer as briefly as possible, use code with comments.";
 
     private readonly Exception _badClient =
         new("Cannot download inputs/submit answers, user secret \"session\" has not been set, check readme.");
@@ -73,21 +55,11 @@ internal partial class AdventClient
         var handler = new HttpClientHandler { UseCookies = false };
         _adventClient = new HttpClient(handler) { BaseAddress = new Uri("https://adventofcode.com/") };
 
-        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.4.2");
+        var version = new ProductInfoHeaderValue("AdventOfCodeSupport", "2.5.0");
         var comment = new ProductInfoHeaderValue("(+nuget.org/packages/AdventOfCodeSupport by @Zaneris)");
         _adventClient.DefaultRequestHeaders.UserAgent.Add(version);
         _adventClient.DefaultRequestHeaders.UserAgent.Add(comment);
         _adventClient.DefaultRequestHeaders.Add("cookie", $"session={cookie.Trim()}");
-
-        // Configure ChatGPT client;
-        if (_gptClient is not null) return;
-        var secret = config["secret"];
-        if (string.IsNullOrWhiteSpace(secret)) return;
-        _gptClient = new HttpClient
-        {
-            BaseAddress = new Uri("https://api.openai.com/v1/"),
-            DefaultRequestHeaders = {{"Authorization", $"Bearer {secret.Trim()}"}}
-        };
     }
 
     public async Task DownloadInputAsync(AdventBase day)
@@ -197,42 +169,6 @@ internal partial class AdventClient
         var match = RegexWaitBefore().Match(html);
         if (match.Success)
             Console.WriteLine($"Please {match.Captures[0].Value} submitting again.");
-
-        if (_gptClient is null)
-        {
-            Console.WriteLine("Set dotnet user-secret \"secret\" with an OpenAI API key secret for auto ChatGPT help.");
-            if (testHtml is null) await Task.Delay(2000); // Rate limit.
-            return false;
-        }
-
-        var actualRequest = _gptBaseRequest.DeepClone();
-        var helpMe = GPT_HELP_ME.Replace("{num}", part.ToString());
-        var response = await _adventClient!.GetAsync($"{day.Year}/day/{day.Day}");
-        if (!response.IsSuccessStatusCode)
-            throw new Exception("Failed to download puzzle question to pass to ChatGPT");
-        var problem = await response.Content.ReadAsStringAsync();
-        problem = RegexPuzzleProblem().Match(problem).Value;
-        var classText = LocateClassText();
-        if (classText is null)
-            throw new Exception($"Unable to locate .cs file for {_calledBy.Year}-{_calledBy.Day}");
-        actualRequest["messages"]!.AsArray().Add(new JsonObject
-        {
-            ["role"] = "user",
-            ["content"] = $"{helpMe}\n{problem}\n{classText}"
-        });
-        Console.WriteLine("Incorrect answer, asking ChatGPT for help...");
-        response = await _gptClient.PostAsJsonAsync("chat/completions", actualRequest);
-        if (!response.IsSuccessStatusCode)
-            throw new Exception("Failed to retrieve response from ChatGPT");
-        var json = await response.Content.ReadFromJsonAsync<JsonObject>();
-        if (json is not null && json.ContainsKey("choices") && json["choices"]!.AsArray().Count > 0)
-        {
-            var fix = json["choices"]![0]!["message"]!["content"]!.ToString();
-            Console.WriteLine(fix);
-        }
-        else throw new Exception("Unexpected response from ChatGPT");
-
-        // TODO: Cache puzzle questions
 
         return false;
     }

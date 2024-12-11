@@ -24,6 +24,8 @@ public abstract partial class AdventBase
     private string? _testHtmlLookup;
     private bool _downloadedAnswers;
     private bool _onLoad;
+    private bool _useSampleInput;
+    private bool _samplePart2;
 
     private static string? _projectRoot;
     internal static string ProjectRoot
@@ -120,10 +122,32 @@ public abstract partial class AdventBase
     {
         get
         {
-            if (_input is not null) return _input;
+            if (!_useSampleInput && _input is not null) return _input;
             var inputPattern = _adventSolutions?.InputPattern ?? "yyyy/Inputs/dd.txt";
             inputPattern = inputPattern.Replace("yyyy", $"{Year}");
-            inputPattern = inputPattern.Replace("dd", $"{Day:D2}");
+            if (_useSampleInput)
+            {
+                if (_samplePart2)
+                {
+                    var test = inputPattern.Replace("dd", $"Sample{Day:D2}P2");
+                    if (File.Exists(Path.Combine(ProjectRoot, test)))
+                    {
+                        inputPattern = test;
+                    }
+                    else
+                    {
+                        inputPattern = inputPattern.Replace("dd", $"Sample{Day:D2}");
+                    }
+                }
+                else
+                {
+                    inputPattern = inputPattern.Replace("dd", $"Sample{Day:D2}");
+                }
+            }
+            else
+            {
+                inputPattern = inputPattern.Replace("dd", $"{Day:D2}");
+            }
             try
             {
                 Console.WriteLine($"{ProjectRoot}/{inputPattern}");
@@ -243,6 +267,41 @@ public abstract partial class AdventBase
     }
 
     /// <summary>
+    /// Runs <see cref="InternalPart1"/> and compares the returned value to <c>expectedResult</c>, throws if this fails.
+    /// Uses Input file pattern <c>Sample01.txt SampleO2.txt</c> in folder with regular Inputs.
+    /// </summary>
+    /// <param name="expectedResult">Return of <see cref="InternalPart1"/> is compared to the provided parameter</param>
+    /// <returns><see cref="AdventBase"/></returns>
+    /// <exception cref="Exception">Throws if Part 1 does not match the <c>expectedResult</c></exception>
+    public AdventBase Part1Sample(object expectedResult)
+    {
+        _useSampleInput = true;
+        Part1();
+        if (expectedResult.ToString() != _part1)
+            throw new Exception("Part 1 does not match expected result.");
+        return this;
+    }
+
+    /// <summary>
+    /// Runs <see cref="InternalPart2"/> and compares the returned value to <c>expectedResult</c>, throws if this fails.
+    /// Uses Input file pattern <c>Sample01P2.txt SampleO2P2.txt</c> in folder with regular Inputs. If <c>P2</c> is not
+    /// found, <c>Sample01.txt SampleO2.txt</c> is used.
+    /// </summary>
+    /// <param name="expectedResult">Return of <see cref="InternalPart2"/> is compared to the provided parameter</param>
+    /// <returns><see cref="AdventBase"/></returns>
+    /// <exception cref="Exception">Throws if Part 2 does not match the <c>expectedResult</c></exception>
+    public AdventBase Part2Sample(object expectedResult)
+    {
+        _useSampleInput = true;
+        _samplePart2 = true;
+        Part2();
+        if (expectedResult.ToString() != _part2)
+            throw new Exception("Part 2 does not match expected result.");
+        _samplePart2 = false;
+        return this;
+    }
+
+    /// <summary>
     /// Check Part1() answer against the confirmed submitted answer on AoC.
     /// Must have set user secret session cookie.
     /// </summary>
@@ -358,8 +417,8 @@ public abstract partial class AdventBase
     }
 
     /// <summary>
-    /// Set a custom HTML lookup/submission result to be used by CheckPartAsync
-    /// and SubmitPartAsync instead of the downloaded pages.
+    /// Set a custom HTML lookup/submission result to be used by <see cref="CheckPart1Async"/>
+    /// and <see cref="SubmitPart1Async"/> instead of the downloaded pages.
     /// </summary>
     /// <param name="htmlSubmitResult">The custom HTML submission result to test with.</param>
     /// <param name="htmlLookupResult">The custom HTML already submitted answer result to test with.</param>
