@@ -32,8 +32,11 @@ public class InputBlock
     {
         get
         {
+            var hasReturn = Span.IndexOf((byte)'\r');
             var width = Span.IndexOf((byte)'\n');
-            return new ReadOnlySpan2D<byte>(Bytes, 0, (Span.Length + 1) / (width + 1), width, 1);
+            return hasReturn > 0
+                ? new ReadOnlySpan2D<byte>(Bytes, 0, (Span.Length + 1) / (width + 1), hasReturn, 2)
+                : new ReadOnlySpan2D<byte>(Bytes, 0, (Span.Length + 1) / (width + 1), width, 1);
         }
     }
 

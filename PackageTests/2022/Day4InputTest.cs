@@ -17,11 +17,11 @@ public class Day4InputTest : AdventBase
             Bag["Block2Lines"] = Input.Blocks[1].Lines.Length.ToString();
         }
 
-        return "Test";
+        return Input.Lines[0].Trim();
     }
 
     protected override object InternalPart2()
     {
-        return 42;
+        return Input.Lines[0];
     }
 }

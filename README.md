@@ -7,6 +7,7 @@ central location, with built-in support for BenchmarkDotNet, downloading input f
 * Add a folder to your project for the current year i.e. `2024`.
 * Add a subfolder to the year called `Inputs`.
 * Place each day's input into that folder named by day with 2 digits `01.txt`.
+* Optionally place the sample inputs into a similarly named `Sample01.txt`.
 * Create a class in the `2024` folder called `Day01.cs`
 ```text
 Project/
@@ -16,7 +17,10 @@ Project/
     ├── Day02.cs
     └── Inputs/
         ├── 01.txt
-        └── 02.txt
+        ├── 02.txt
+        ├── Sample01.txt
+        ├── Sample02.txt
+        └── Sample02P2.txt
 ```
 ```csharp
 using AdventOfCodeSupport;
@@ -67,6 +71,7 @@ var solutions = new AdventSolutions();
 var today = solutions.GetMostRecentDay();
 // var day3 = solutions.GetDay(2024, 3);
 // var day4 = solutions.First(x => x.Year == 2024 && x.Day == 4);
+// today.Part1Sample("Answer to everything").Part2Sample(42);
 today.Part1().Part2();
 // today.Benchmark();
 ```
@@ -83,7 +88,10 @@ Project/
 ├── Year2024Day02.cs
 └── Inputs/
     ├── 202401.txt
-    └── 202402.txt
+    ├── 202402.txt
+    ├── 2024Sample01.txt
+    ├── 2024Sample02.txt
+    └── 2024Sample02P2.txt
 ```
 You would instantiate your `AdventSolutions` as follows:
 ```csharp
@@ -123,6 +131,31 @@ await day.DownloadInputAsync();
 This only downloads input files that aren't on disk, so if you need to replace
 one for whatever reason, you'll need to delete the old file first.
 
+## Run Samples
+
+Most puzzle days include a sample input and expected result in addition to the day's
+actual input file. Placing these in your inputs folder in a separate file with a similar 
+naming pattern, so `Day01` has `01.txt` but could also have `2` additional files, `Sample01.txt`
+and optionally `Sample01P2.txt` (refer to file tree in Quick Start), if the sample input is the same for Part 2 of the day's
+puzzle, you can exclude the separate `P2` file, and it will use the first part's file. 
+
+```csharp
+var solutions = new AdventSolutions();
+var day = solutions.GetMostRecentDay();
+day.Part1Sample("Answer to everything");
+day.Part2Sample(42);
+```
+
+Checking the samples will throw if the comparison fails allowing you to chain everything together safely.
+
+See example:
+```csharp
+await day.Part1Sample(42).SubmitPart1Async();
+```
+
+If Part 1 using the sample input file does not return 42, this will throw and prevent `SubmitPart1Async`
+from ever being reached.
+
 ## Submit Answers
 If you'd like to submit your answers from code, follow the steps for the 
 user-secrets in the Download Input Files section above.
@@ -137,18 +170,6 @@ var day = solutions.GetMostRecentDay();
 await day.SubmitPart1Async();
 await day.SubmitPart2Async();
 ```
-
-## ChatGPT Integration
-First a disclaimer that using this functionality will disqualify you from participation in the competition for the global
-leaderboard (top 100) as per https://adventofcode.com/about#faq_ai_leaderboard
-
-Ensure you've followed the steps under `Download Input Files` to initialize `dotnet user-secrets` and set the
-Advent of Code session cookie. Next obtain your secret key from https://platform.openai.com/api-keys and run:
-```text
-dotnet user-secrets set "secret" "key goes here"
-```
-Now your next incorrect submission to AoC with `await day.SubmbitPart1/2Async()` will trigger automatic feedback
-to your attempted solution and be logged to console.
 
 ## Check Answers
 If you'd like to check your answers from code, follow the steps for the

@@ -8,11 +8,11 @@ public class Day6PatternTest : AdventBase
     {
         Bag["Text"] = Input.Text;
 
-        return "Test";
+        return Input.Lines[0];
     }
 
     protected override object InternalPart2()
     {
-        throw new NotImplementedException();
+        return Input.Lines[0];
     }
 }

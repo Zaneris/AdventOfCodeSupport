@@ -48,6 +48,21 @@ public class PackageTests
     }
 
     [Fact]
+    public void SampleInputTest_AllText_SampleFileUsed()
+    {
+        var day = _solutions.GetDay(2022, 4);
+        day.Part1Sample("Sample04").Part2Sample("Sample04P2");
+        Assert.Contains("Test", day.Part1Answer);
+    }
+
+    [Fact]
+    public void SampleInputTest_AllText_SampleP2Skipped()
+    {
+        var day = _solutions.GetDay(2022, 6);
+        day.Part1Sample("Sample06").Part2Sample("Sample06");
+    }
+
+    [Fact]
     public void InputTest_CustomInput_TextLoaded()
     {
         var day = _solutions.GetDay(2022, 4);
@@ -105,6 +120,16 @@ public class PackageTests
         var day = _solutions.GetDay(2022, 4);
         day.Part1();
         Assert.Equal("1", day.GetBag()["Block2Lines"]);
+    }
+
+    [Fact]
+    public void InputTest_Span2D_RowsColsAsExpected()
+    {
+        var day = _solutions.GetDay(2022, 7);
+        day.Part1();
+        Assert.Equal("10", day.GetBag()["Cols"]);
+        Assert.Equal("6", day.GetBag()["Rows"]);
+        Assert.Equal("9", day.GetBag()["Last"]);
     }
 
     [Fact]
