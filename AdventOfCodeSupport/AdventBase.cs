@@ -152,7 +152,7 @@ public abstract partial class AdventBase
             InputBlock? inputBlock;
             try
             {
-                Console.WriteLine($"{ProjectRoot}/{inputPattern}");
+                Console.WriteLine($"Input: {ProjectRoot}/{inputPattern}");
                 inputBlock = new InputBlock(File.ReadAllBytes(Path.Combine(ProjectRoot, inputPattern)));
             }
             catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
@@ -282,15 +282,12 @@ public abstract partial class AdventBase
     {
         _useSampleInput = true;
         if (Year == 0) LoadYearDay(null);
-        if (!_onLoad)
-        {
-            InternalOnLoad();
-            _onLoad = true;
-        }
+        InternalOnLoad();
         var result = InternalPart1().ToString();
         if (expectedResult.ToString() != result)
             throw new Exception("Part 1 does not match expected result.");
         _useSampleInput = false;
+        Console.WriteLine($"Part 1 answer {result} matches the expected {expectedResult} !");
         return this;
     }
 
@@ -307,16 +304,13 @@ public abstract partial class AdventBase
         _useSampleInput = true;
         _samplePart2 = true;
         if (Year == 0) LoadYearDay(null);
-        if (!_onLoad)
-        {
-            InternalOnLoad();
-            _onLoad = true;
-        }
+        InternalOnLoad();
         var result = InternalPart2().ToString();
         if (expectedResult.ToString() != result)
             throw new Exception("Part 2 does not match expected result.");
         _useSampleInput = false;
         _samplePart2 = false;
+        Console.WriteLine($"Part 2 answer {result} matches the expected {expectedResult} !");
         return this;
     }
 
