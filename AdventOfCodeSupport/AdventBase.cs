@@ -148,10 +148,12 @@ public abstract partial class AdventBase
             {
                 inputPattern = inputPattern.Replace("dd", $"{Day:D2}");
             }
+
+            InputBlock? inputBlock;
             try
             {
                 Console.WriteLine($"{ProjectRoot}/{inputPattern}");
-                _input = new InputBlock(File.ReadAllBytes(Path.Combine(ProjectRoot, inputPattern)));
+                inputBlock = new InputBlock(File.ReadAllBytes(Path.Combine(ProjectRoot, inputPattern)));
             }
             catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
             {
@@ -161,6 +163,9 @@ public abstract partial class AdventBase
                                      If no input for the day, disable in the constructor with : base({Year}, {Day}, false)
                                      """);
             }
+
+            if (_useSampleInput) return inputBlock;
+            _input = inputBlock;
             return _input;
         }
     }

@@ -52,6 +52,7 @@ public class PackageTests
     {
         var day = _solutions.GetDay(2022, 4);
         day.Part1Sample("Sample04").Part2Sample("Sample04P2");
+        Assert.Contains("Test", day.Part1Answer);
     }
 
     [Fact]
