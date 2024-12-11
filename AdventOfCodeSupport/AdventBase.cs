@@ -276,9 +276,16 @@ public abstract partial class AdventBase
     public AdventBase Part1Sample(object expectedResult)
     {
         _useSampleInput = true;
-        Part1();
-        if (expectedResult.ToString() != _part1)
+        if (Year == 0) LoadYearDay(null);
+        if (!_onLoad)
+        {
+            InternalOnLoad();
+            _onLoad = true;
+        }
+        var result = InternalPart1().ToString();
+        if (expectedResult.ToString() != result)
             throw new Exception("Part 1 does not match expected result.");
+        _useSampleInput = false;
         return this;
     }
 
@@ -294,9 +301,16 @@ public abstract partial class AdventBase
     {
         _useSampleInput = true;
         _samplePart2 = true;
-        Part2();
-        if (expectedResult.ToString() != _part2)
+        if (Year == 0) LoadYearDay(null);
+        if (!_onLoad)
+        {
+            InternalOnLoad();
+            _onLoad = true;
+        }
+        var result = InternalPart2().ToString();
+        if (expectedResult.ToString() != result)
             throw new Exception("Part 2 does not match expected result.");
+        _useSampleInput = false;
         _samplePart2 = false;
         return this;
     }
